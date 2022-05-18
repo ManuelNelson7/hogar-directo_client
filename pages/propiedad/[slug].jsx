@@ -1,9 +1,40 @@
 import React from 'react'
+import Layout from '../../components/Layout/Layout'
+import PropiedadDetails from '../../components/Propiedad'
 import { sanityClient } from '../../sanity'
 
-const Property = ({title}) => {
+const Property = ({
+    title,
+    location,
+    propertyType,
+    mainImage,
+    images,
+    price,
+    expensas,
+    ambientes,
+    bathrooms,
+    descripcion,
+    modalidad,
+    owner
+}) => {
     return (
-        <div>{title}</div>
+        <Layout>
+            <PropiedadDetails 
+                title={title}
+                location={location}
+                propertyType={propertyType}
+                mainImage={mainImage}
+                images={images}
+                price={price}
+                expensas={expensas}
+                ambientes={ambientes}
+                bathrooms={bathrooms}
+                descripcion={descripcion}
+                modalidad={modalidad}
+                owner={owner}
+            />
+        </Layout>
+
     )
 }
 
@@ -21,13 +52,12 @@ export const getServerSideProps = async (pageContext) => {
        ambientes,
        bathrooms,
        descripcion,
-       modalidad
+       modalidad,
        owner->{
-           _id,
-              name,
-              slug,
-              image
-       },
+           name,
+           slug,
+           image
+    },
    }`
 
     const property = await sanityClient.fetch(query, { pageSlug })
@@ -46,12 +76,13 @@ export const getServerSideProps = async (pageContext) => {
                 mainImage: property.mainImage,
                 images: property.images,
                 price: property.price,
-                expensas: property.expensas,
+                expensas: property.expensas || null,
                 ambientes: property.ambientes,
                 bathrooms: property.bathrooms,
                 descripcion: property.descripcion,
                 modalidad: property.modalidad,
-                owner: property.owner,
+                owner: property.owner || null,
+
             },
         }
     }

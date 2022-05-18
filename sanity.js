@@ -1,14 +1,16 @@
-import { createClient, createImageUrlBuilder } from "next-sanity"
+import { createClient } from "next-sanity"
+import imageUrlBuilder from '@sanity/image-url'
 
 const config = {
-
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  projectId: "ekdlavlv",
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   useCdn: process.env.NODE_ENV === "production",
-
 }
 
-export const urlFor = (source) => createImageUrlBuilder(config).image(source)
+const builder = imageUrlBuilder(config)
 
-// Set up the client for fetching data in the getProps page functions
+export const urlFor = (source) => {
+  return builder.image(source)
+}
+
 export const sanityClient = createClient(config)
