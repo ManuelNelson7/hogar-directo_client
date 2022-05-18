@@ -1,8 +1,7 @@
-
-import { useState } from 'react'
-import { Disclosure, RadioGroup, Tab } from '@headlessui/react'
 import { formatPrice, isMultiple } from '../utils'
 import Image from './Image'
+import { MailIcon } from '@heroicons/react/solid'
+import { RiWhatsappFill } from 'react-icons/ri'
 
 
 const product = {
@@ -52,10 +51,6 @@ const product = {
     ],
 }
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
-
 const PropiedadDetails = ({
     title,
     location,
@@ -70,16 +65,13 @@ const PropiedadDetails = ({
     modalidad,
     owner
 }) => {
-    const [selectedColor, setSelectedColor] = useState(product.colors[0])
-
-    console.log(mainImage)
 
     return (
         <div className="bg-white">
-            <div className="max-w-2xl mx-auto py-16 px-4 sm:py-2 sm:px-6 lg:max-w-7xl lg:px-8">
+            <div className="max-w-2xl pb-4 mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-4">
                 <div className="flex flex-col">
                     {/* Image gallery */}
-                    <div className="gallery">
+                    <div className="grid grid-cols-[2fr_1fr] gap-3 gallery">
                         <div className="flex">
                             <Image identifier='main-image' image={mainImage} />
                         </div>
@@ -92,47 +84,120 @@ const PropiedadDetails = ({
 
                     {/* Product info */}
                     <div className="pt-4 px-4 sm:px-0 sm:mt-16 lg:mt-0">
-                        <div className='border-2 py-3 px-4 rounded-xl'>
-                            <p className='capitalize font-bold text-yellow-600'>{modalidad}</p>
+                        <div className="grid grid-cols-[2fr_1fr] gap-3">
 
-                            <div className="mt-2">
-                                <p className="text-3xl text-gray-900 font-semibold">{formatPrice(price)}</p>
-                                {expensas && <p className="text-md text-gray-700">{`+${formatPrice(expensas)} expensas`}</p>}
+                            <div className="info">
+                                <section className='border-2 py-3 px-4 rounded-xl'>
+                                    <p className='capitalize font-bold text-yellow-600'>{modalidad}</p>
+
+                                    <div className="mt-2">
+                                        <p className="text-2xl text-gray-900 font-semibold">{formatPrice(price)}</p>
+                                        {expensas && <p className="text-md text-gray-700">{`+${formatPrice(expensas)} expensas`}</p>}
+                                    </div>
+
+                                    <div className="mt-2">
+                                        <p className="text-xl text-gray-900 font-semibold capitalize">
+                                            {`${propertyType} - ${ambientes} ambiente${isMultiple(ambientes)} - ${bathrooms} baño${isMultiple(bathrooms)}`}
+                                        </p>
+                                    </div>
+                                </section>
+
+                                <section className="mt-6">
+                                    <h1 className="text-2xl font-bold tracking-tight text-gray-900">{title}</h1>
+
+                                    <div
+                                        className="text-base text-gray-700 mt-2 w-11/12"
+                                        dangerouslySetInnerHTML={{ __html: descripcion }}
+                                    />
+                                </section>
+
+                                <section aria-labelledby="details-heading" className="mt-6">
+
+                                    <h3 className="text-xl font-bold tracking-tight text-gray-900">Ubicación</h3>
+                                </section>
                             </div>
 
-                            <div className="mt-2">
-                                <p className="text-xl text-gray-900 font-semibold capitalize">
-                                    {`${propertyType} - ${ambientes} ambiente${isMultiple(ambientes)} - ${bathrooms} baño${isMultiple(bathrooms)}`}
-                                </p>
-                            </div>
-                        </div>
+                            <div className="form">
+                                <div className='border-2 py-3 px-4 rounded-xl bg-gray-100'>
+                                    <h4 className='text-xl font-semibold text-gray-900'>Contactá al anunciante</h4>
+                                    <div className="flex mt-3">
+                                        <div className="h-14 w-14 profile-pic">
+                                            <Image image={owner.image} />
+                                        </div>
+                                        <div className='ml-4 flex flex-col justify-center'>
+                                            <h4 className="text-xl font-bold">{owner.name}</h4>
+                                            <h3 className='text-yellow-600 font-bold'>Dueño directo</h3>
+                                        </div>
 
-                        <div className="mt-6">
-                            <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
+                                    </div>
 
-                            <div
-                                className="text-base text-gray-700 mt-2"
-                                dangerouslySetInnerHTML={{ __html: descripcion }}
-                            />
-                        </div>
+                                    <>
+                                        <div className='mt-3'>
+                                            <div className="mt-1">
+                                                <input
+                                                    type="text"
+                                                    name="email"
+                                                    id="email"
+                                                    className="shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                    placeholder="Email"
+                                                />
+                                            </div>
+                                        </div>
 
-                        <div className='border-2 py-3 px-4 rounded-xl mt-6'>
-                            <div className="flex">
-                                <div className="h-16 w-16 profile-pic">
-                                    <Image image={owner.image} />
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                                            <input
+                                                type="text"
+                                                name="nombre"
+                                                id="nombre"
+                                                className=" mt-2 shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                placeholder="Nombre"
+                                            />
+
+                                            <input
+                                                type="text"
+                                                name="telefono"
+                                                id="telefono"
+                                                className="mt-2 shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                placeholder="Teléfono"
+                                            />
+
+                                        </div>
+
+                                        <div className='mt-1'>
+                                            <label className='text-sm text-gray-700'>Mensaje</label>
+                                            <textarea
+                                                type="text"
+                                                name="nombre"
+                                                id="nombre"
+                                                className="mt-0.5 shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                placeholder="Hola! Ví la propiedad que publicaste en Hogar Directo y me interesa. ¿Cuándo podríamos coordinar una visita?"
+                                            />
+                                        </div>
+
+                                        <div className='flex flex-col mt-4 gap-2'>
+                                            <button
+                                                type="button"
+                                                className="flex justify-center font-semibold items-center px-4 py-2 border border-transparent shadow-sm text-base rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition-all duration-75"
+                                            >
+                                                Contactar
+                                                <MailIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="flex justify-center font-semibold items-center px-4 py-2 border border-transparent shadow-sm text-base rounded-md text-white bg-green-600 hover:bg-green-700 transition-all duration-75"
+                                            >
+                                                Contactar por whatsapp
+                                                <RiWhatsappFill className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
+                                            </button>
+                                        </div>
+
+                                    </>
+
                                 </div>
-                                <div className='ml-4 flex flex-col justify-center'>
-                                    <h4 className="text-xl font-bold">{owner.name}</h4>
-                                    <h3 className='text-yellow-600 font-bold'>Dueño directo</h3>
-                                </div>
                             </div>
-                        </div>
 
-                        <section aria-labelledby="details-heading" className="mt-12">
-                            <h2 id="details-heading" className="sr-only">
-                                Additional details
-                            </h2>
-                        </section>
+                        </div>
                     </div>
                 </div>
             </div>
