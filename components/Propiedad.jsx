@@ -2,54 +2,7 @@ import { formatPrice, isMultiple } from '../utils'
 import Image from './Image'
 import { MailIcon } from '@heroicons/react/solid'
 import { RiWhatsappFill } from 'react-icons/ri'
-
-
-const product = {
-    name: 'Zip Tote Basket',
-    price: '$140',
-    rating: 4,
-    colors: [
-        { name: 'Washed Black', bgColor: 'bg-gray-700', selectedColor: 'ring-gray-700' },
-        { name: 'White', bgColor: 'bg-white', selectedColor: 'ring-gray-400' },
-        { name: 'Washed Gray', bgColor: 'bg-gray-500', selectedColor: 'ring-gray-500' },
-    ],
-    description: `
-    <p>The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag. The zip top and durable canvas construction keeps your goods protected for all-day use.</p>
-  `,
-    images: [
-        {
-            src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg',
-            alt: 'Two each of gray, white, and black shirts laying flat.',
-        },
-        {
-            src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg',
-            alt: 'Model wearing plain black basic tee.',
-        },
-        {
-            src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg',
-            alt: 'Model wearing plain gray basic tee.',
-        },
-        {
-            src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg',
-            alt: 'Model wearing plain white basic tee.',
-        },
-    ],
-    details: [
-        {
-            name: 'Features',
-            items: [
-                'Multiple strap configurations',
-                'Spacious interior with top zip',
-                'Leather handle and tabs',
-                'Interior dividers',
-                'Stainless strap loops',
-                'Double stitched construction',
-                'Water-resistant',
-            ],
-        },
-        // More sections...
-    ],
-}
+import Map from './Map'
 
 const PropiedadDetails = ({
     title,
@@ -112,8 +65,9 @@ const PropiedadDetails = ({
                                 </section>
 
                                 <section aria-labelledby="details-heading" className="mt-6">
+                                    <h3 className="text-zl font-bold tracking-tight text-gray-900">Ubicación</h3>
 
-                                    <h3 className="text-xl font-bold tracking-tight text-gray-900">Ubicación</h3>
+                                    <Map location={location}></Map>
                                 </section>
                             </div>
 
