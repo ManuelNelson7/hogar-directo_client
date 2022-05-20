@@ -21,7 +21,7 @@ const Hero = () => {
     ]
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="bg-white">
             <div>
                 {/* Hero card */}
                 <div className="relative">

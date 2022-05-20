@@ -1,8 +1,11 @@
 import { formatPrice, isMultiple } from '../utils'
-import Image from './Image'
+import Image from './Image/Image'
+import GalleryImage from './Image/GalleryImage'
 import { MailIcon } from '@heroicons/react/solid'
 import { RiWhatsappFill } from 'react-icons/ri'
 import Map from './Map'
+import ProfilePic from './Image/ProfilePic'
+import MainImage from './Image/MainImage'
 
 const PropiedadDetails = ({
     title,
@@ -26,11 +29,11 @@ const PropiedadDetails = ({
                     {/* Image gallery */}
                     <div className="grid grid-cols-[2fr_1fr] gap-3 gallery">
                         <div className="flex">
-                            <Image identifier='main-image' image={mainImage} />
+                            <MainImage identifier='main-image' image={mainImage} />
                         </div>
                         <div className="flex flex-col gap-3 classic-images">
                             {images?.map((image) => (
-                                <Image identifier='image' image={image} />
+                                <GalleryImage identifier='image' image={image} />
                             ))}
                         </div>
                     </div>
@@ -65,9 +68,10 @@ const PropiedadDetails = ({
                                 </section>
 
                                 <section aria-labelledby="details-heading" className="mt-6">
-                                    <h3 className="text-zl font-bold tracking-tight text-gray-900">Ubicación</h3>
-
-                                    <Map location={location}></Map>
+                                    <h3 className="text-2xl font-bold tracking-tight text-gray-900">Ubicación</h3>
+                                    <div className='mt-4'>
+                                        <Map location={location}></Map>
+                                    </div>
                                 </section>
                             </div>
 
@@ -76,7 +80,7 @@ const PropiedadDetails = ({
                                     <h4 className='text-xl font-semibold text-gray-900'>Contactá al anunciante</h4>
                                     <div className="flex mt-3">
                                         <div className="h-14 w-14 profile-pic">
-                                            <Image image={owner.image} />
+                                            <ProfilePic image={owner.image} />
                                         </div>
                                         <div className='ml-4 flex flex-col justify-center'>
                                             <h4 className="text-xl font-bold">{owner.name}</h4>
