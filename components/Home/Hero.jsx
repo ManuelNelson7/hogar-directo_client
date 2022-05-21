@@ -39,7 +39,7 @@ const Hero = () => {
                             <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 flex flex-col items-center">
                                 <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
                                     <span className="block text-white">Encontrá tu hogar</span>
-                                    <span className="block text-yellow-400">sin dramas</span>
+                                    <span className="block text-teal-400">sin dramas</span>
                                 </h1>
 
                                 <div className="mt-10 sm:mt-12 flex flex-col w-10/12">
@@ -79,7 +79,7 @@ const Hero = () => {
                                             <div className="">
                                                 <button
                                                     type="submit"
-                                                    className="block w-full py-3 px-6 rounded-lg sm:rounded-none sm:rounded-r-lg shadow bg-yellow-600 text-white font-semibold hover:bg-yellow-700 transition-all duration-10"
+                                                    className="block w-full py-3 px-6 rounded-lg sm:rounded-none sm:rounded-r-lg shadow bg-teal-500 text-white font-semibold hover:bg-teal-600 transition-all duration-10"
                                                 >
                                                     Buscar
                                                 </button>

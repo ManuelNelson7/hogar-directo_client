@@ -4,7 +4,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 const Map = ({ location }) => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: process.env.googlePlacesAPI
+        googleMapsApiKey: 'AIzaSyDz678a_Ux5jTiLt2wONgOYLtp6QbMcHDc'
     })
 
     const containerStyle = {
@@ -30,7 +30,7 @@ const Map = ({ location }) => {
         setMap(null)
     }, [])
 
-    const image = "/img/flat.png";
+    const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
     return isLoaded ? (
         <GoogleMap
@@ -39,6 +39,12 @@ const Map = ({ location }) => {
             zoom={10}
             onLoad={onLoad}
             onUnmount={onUnmount}
+            options={{
+                streetViewControl: false,
+                mapTypeControl: false,
+                zoomControl: false,
+                fullscreenControl: false,
+            }}
         >
             <Marker
                 position={{ lat: location.lat, lng: location.lng }}

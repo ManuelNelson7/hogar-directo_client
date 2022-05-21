@@ -10,7 +10,7 @@ const HomeList = ({ properties }) => {
             <div className="max-w-2xl mx-auto px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
                 <div className="flex items-center justify-between space-x-4">
                     <h2 className="text-2xl font-bold text-gray-900">Propiedades más vistas</h2>
-                    <p href="#" className="whitespace-nowrap text-sm font-bold text-yellow-600 hover:text-yellow-500">
+                    <p href="#" className="whitespace-nowrap text-sm font-bold text-teal-500 hover:text-teal-600">
                         Ver todas<span aria-hidden="true"> &rarr;</span>
                     </p>
                 </div>
@@ -26,7 +26,7 @@ const HomeList = ({ properties }) => {
                                     <h3 className='font-bold'>
                                         {`${property.title.slice(0, 30)}...`}
                                     </h3>
-                                    <p className='text-yellow-600 font-semibold'>{formatPrice(property.price)}</p>
+                                    <p className='text-teal-500 font-semibold'>{formatPrice(property.price)}</p>
                                 </div>
                                 <p className="mt-1 text-sm text-gray-500">{property.category}</p>
                             </div>

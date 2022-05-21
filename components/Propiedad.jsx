@@ -44,7 +44,7 @@ const PropiedadDetails = ({
 
                             <div className="info">
                                 <section className='border-2 py-3 px-4 rounded-xl'>
-                                    <p className='capitalize font-bold text-yellow-600'>{modalidad}</p>
+                                    <p className='capitalize font-bold text-teal-600'>{modalidad}</p>
 
                                     <div className="mt-2">
                                         <p className="text-2xl text-gray-900 font-semibold">{formatPrice(price)}</p>
@@ -84,7 +84,7 @@ const PropiedadDetails = ({
                                         </div>
                                         <div className='ml-4 flex flex-col justify-center'>
                                             <h4 className="text-xl font-bold">{owner.name}</h4>
-                                            <h3 className='text-yellow-600 font-bold'>Dueño directo</h3>
+                                            <h3 className='text-teal-600 font-bold'>Dueño directo</h3>
                                         </div>
 
                                     </div>
@@ -96,7 +96,7 @@ const PropiedadDetails = ({
                                                     type="text"
                                                     name="email"
                                                     id="email"
-                                                    className="shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                    className="shadow-sm focus:outline-none focus:border-teal-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
                                                     placeholder="Email"
                                                 />
                                             </div>
@@ -107,7 +107,7 @@ const PropiedadDetails = ({
                                                 type="text"
                                                 name="nombre"
                                                 id="nombre"
-                                                className=" mt-2 shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                className=" mt-2 shadow-sm focus:outline-none focus:border-teal-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
                                                 placeholder="Nombre"
                                             />
 
@@ -115,7 +115,7 @@ const PropiedadDetails = ({
                                                 type="text"
                                                 name="telefono"
                                                 id="telefono"
-                                                className="mt-2 shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                className="mt-2 shadow-sm focus:outline-none focus:border-teal-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
                                                 placeholder="Teléfono"
                                             />
 
@@ -127,7 +127,7 @@ const PropiedadDetails = ({
                                                 type="text"
                                                 name="nombre"
                                                 id="nombre"
-                                                className="mt-0.5 shadow-sm focus:outline-none focus:border-yellow-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
+                                                className="mt-0.5 shadow-sm focus:outline-none focus:border-teal-600 placeholder-gray-700 block w-full p-2.5 sm:text-sm border-2 border-gray-300 rounded-lg"
                                                 placeholder="Hola! Ví la propiedad que publicaste en Hogar Directo y me interesa. ¿Cuándo podríamos coordinar una visita?"
                                             />
                                         </div>
@@ -135,7 +135,7 @@ const PropiedadDetails = ({
                                         <div className='flex flex-col mt-4 gap-2'>
                                             <button
                                                 type="button"
-                                                className="flex justify-center font-semibold items-center px-4 py-2 border border-transparent shadow-sm text-base rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition-all duration-75"
+                                                className="flex justify-center font-semibold items-center px-4 py-2 border border-transparent shadow-sm text-base rounded-md text-white bg-teal-600 hover:bg-teal-700 transition-all duration-75"
                                             >
                                                 Contactar
                                                 <MailIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
