@@ -40,7 +40,7 @@ const PropiedadDetails = ({
 
                     {/* Product info */}
                     <div className="pt-4 px-4 sm:px-0 sm:mt-16 lg:mt-0">
-                        <div className="grid grid-cols-[2fr_1fr] gap-3">
+                        <div className="flex flex-col md:grid md:grid-cols-[2fr_1fr] gap-3">
 
                             <div className="info">
                                 <section className='border-2 py-3 px-4 rounded-xl'>
@@ -75,7 +75,7 @@ const PropiedadDetails = ({
                                 </section>
                             </div>
 
-                            <div className="form">
+                            <div className="form mt-4 md:mt-0">
                                 <div className='border-2 py-3 px-4 rounded-xl bg-gray-100'>
                                     <h4 className='text-xl font-semibold text-gray-900'>Contactá al anunciante</h4>
                                     <div className="flex mt-3">

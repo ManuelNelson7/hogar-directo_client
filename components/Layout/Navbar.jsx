@@ -17,8 +17,8 @@ import {
     HomeIcon
 } from '@heroicons/react/outline'
 import { ChevronDownIcon } from '@heroicons/react/solid'
-import Modal from '../Login/Modal'
 import Link from 'next/link'
+import Modal from '../Modal'
 
 const solutions = [
 
@@ -89,7 +89,7 @@ const Navbar = () => {
 
     return (
         <>
-            {showModal === true ? <Modal /*closer={setShowModal(!showModal) --arreglar esto para que se pueda cerrar el modal con el FaTimes*/></Modal> : ''}
+            {showModal && <Modal showModal={showModal} />}
             <Popover className="fixed z-10 w-full bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex justify-between items-center border-b-2 border-gray-100 py-3 md:justify-start md:space-x-10">
@@ -248,7 +248,7 @@ const Navbar = () => {
                                 )}
                             </Popover>
                         </Popover.Group>
-                        <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0" onClick={()=> setShowModal(true)}>
+                        <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0" onClick={() => setShowModal(true)}>
                             <a href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                                 Publicar gratis
                             </a>

@@ -6,8 +6,6 @@ import { sanityClient } from '../sanity'
 
 const Home = ({ properties }) => {
 
-  console.log(properties[0].slug.current)
-
   return (
     <>
       <Head>
