@@ -3,7 +3,7 @@ import Image from './Image/Image'
 import GalleryImage from './Image/GalleryImage'
 import { MailIcon } from '@heroicons/react/solid'
 import { RiWhatsappFill } from 'react-icons/ri'
-import Map from './Map'
+//import Map from './Map'
 import ProfilePic from './Image/ProfilePic'
 import MainImage from './Image/MainImage'
 
