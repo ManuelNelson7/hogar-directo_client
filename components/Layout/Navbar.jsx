@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState, useContext } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import {
     BookmarkAltIcon,
@@ -18,10 +18,7 @@ import {
 } from '@heroicons/react/outline'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
-import Modal from '../Modal'
-import { onAuthStateChanged, signOut } from '@firebase/auth'
-import {auth, createUserWithEmailAndPassword} from '../../config'
-import { useRouter } from 'next/router'
+import { AppContext } from '../AppContext'
 
 const solutions = [
 
@@ -87,21 +84,8 @@ function classNames(...classes) {
 }
 
 const Navbar = () => {
-    const router = useRouter()
-    const[usuario,setUsuario] = useState(null)
-    useEffect( ()=>{
-        auth.onAuthStateChanged((user)=>{
-            if(user){
-                setUsuario(user.email)
-                console.log(user.email)
-            }
-        })
-    },[])
-    const CerrarSesion = () =>{
-        auth.signOut()
-        setUsuario(null)
-        router.push('/login')
-    }
+
+    let { user } = useContext(AppContext)
 
     return (
         <>
@@ -267,39 +251,20 @@ const Navbar = () => {
                             <a href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                                 Publicar gratis
                             </a>
-<<<<<<< HEAD
-                            {!usuario ? (
-                                <Link href="../../login">
-                                <a
-                                    className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700"
-                                >
-                                    Ingresar
-                                </a>
+                            {!user ? (
+                                <Link href="/ingresar">
+                                    <a
+                                        className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-500 hover:bg-teal-600"
+                                    >
+                                        Ingresar
+                                    </a>
                                 </Link>
-                                ) : (<a
-                                    className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700"
-                                >
-                                    Hola, Usuario
-                                </a>)
+                            ) : (<a
+                                className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700"
+                            >
+                                {`Hola ${user.displayName.split(' ')[0]}!`}
+                            </a>)
                             }
-                            {usuario ? (
-                                <button onClick={CerrarSesion} className="btn btn-danger">
-                                    Cerrar Sesión
-                                </button>
-                                ) : (
-                                    <span></span>
-                                )
-                            }
-=======
-                            <Link href="/ingresar">
-                                <a
-                                    href="#"
-                                    className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-500 hover:bg-teal-600"
-                                >
-                                    Ingresar
-                                </a>
-                            </Link>
->>>>>>> 3453b44f3ca36b91aea9511d4d11dce7c7ab22a8
                         </div>
                     </div>
                 </div>

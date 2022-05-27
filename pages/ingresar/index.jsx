@@ -1,9 +1,54 @@
-import React from "react"
+import { useContext, useEffect, useState } from "react"
 import Layout from "../../components/Layout/Layout"
 import { HomeIcon } from '@heroicons/react/outline'
 import Link from "next/link"
+import { AppContext } from "../../components/AppContext"
+import { useRouter } from "next/router"
 
 const Ingresar = () => {
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+    name: ""
+  });
+  const [error, setError] = useState("");
+
+  const router = useRouter();
+
+  let { signup, loginWithGoogle } = useContext(AppContext);
+
+  const handleChange = ({ target: { name, value } }) => {
+    setUser({ ...user, [name]: value });
+  }
+
+  const handleGoogleSignUp = async () => {
+    await loginWithGoogle()
+    push("/")
+  }
+
+  const handleSubmit = async (e) => {
+    setError("");
+    e.preventDefault();
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(user.email) && setError("Invalid email");
+    user.password.length < 6 && setError("Password must be at least 6 characters");
+    user.name.length < 3 && setError("Name must be at least 3 characters");
+    if (user) {
+      if (user.password.length > 5 && user.name.length > 2) {
+        try {
+          await signup(user.email, user.password, user.name);
+          push('/')
+        } catch (e) {
+          error.code === "auth/email-already-in-use" && setError("Email already in use")
+          error.code === "auth/invalid-email" && setError("Invalid email")
+          error.code === "auth/weak-password" && setError("Password is too weak")
+        }
+      }
+    } else {
+      setError("Please fill in all fields")
+    }
+  }
+
+
   return (
     <Layout>
       <div className="min-h-screen -mt-16 bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -22,7 +67,8 @@ const Ingresar = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+            
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email
@@ -34,6 +80,7 @@ const Ingresar = () => {
                     type="email"
                     autoComplete="email"
                     required
+                    onChange={handleChange}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
                 </div>
@@ -50,6 +97,7 @@ const Ingresar = () => {
                     type="password"
                     autoComplete="current-password"
                     required
+                    onChange={handleChange}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                   />
                 </div>
