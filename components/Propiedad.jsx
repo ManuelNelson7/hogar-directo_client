@@ -3,7 +3,7 @@ import Image from './Image/Image'
 import GalleryImage from './Image/GalleryImage'
 import { MailIcon } from '@heroicons/react/solid'
 import { RiWhatsappFill } from 'react-icons/ri'
-//import Map from './Map'
+import Map from './Map'
 import ProfilePic from './Image/ProfilePic'
 import MainImage from './Image/MainImage'
 
@@ -44,7 +44,7 @@ const PropiedadDetails = ({
 
                             <div className="info">
                                 <section className='border-2 py-3 px-4 rounded-xl'>
-                                    <p className='capitalize font-bold text-teal-600'>{modalidad}</p>
+                                    <p className={'capitalize text-white font-medium max-w-fit px-2 rounded-lg' + (modalidad == 'alquilar' ? 'text-base bg-yellow-600 rounded-lg' : 'text-base bg-teal-600 rounded-lg')}>{modalidad}</p>
 
                                     <div className="mt-2">
                                         <p className="text-2xl text-gray-900 font-semibold">{formatPrice(price)}</p>
