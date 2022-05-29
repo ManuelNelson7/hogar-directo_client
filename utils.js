@@ -44,3 +44,12 @@ export const propertyQuery = (slug) => {
 }`;
   return query
 } 
+
+
+// const doc = {
+//   _id: auth.currentUser.uid,
+//   _type: 'person',
+//   name: auth.currentUser.displayName,
+//   email: auth.currentUser.email,
+// };
+// sanityClient.createIfNotExists(doc)

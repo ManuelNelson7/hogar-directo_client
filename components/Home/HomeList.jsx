@@ -14,9 +14,8 @@ const HomeList = () => {
                 setProperties(data)
                 setLoading(false)
             })
-    }, [])
 
-
+        }, [])
 
     return (
         <div className="bg-gray-100">

@@ -9,15 +9,12 @@ import {
     sendPasswordResetEmail
 } from 'firebase/auth'
 import { auth } from '../config'
+import { sanityClient } from '../sanity'
 
 export const AppContext = createContext()
 
 const AppContextProvider = ({ children }) => {
     const [user, setUser] = useState(null)
-
-    useEffect(() => {
-        console.log(user)
-    }, [user])
 
     const signup = async (email, password, name) => {
         await createUserWithEmailAndPassword(auth, email, password)
@@ -26,7 +23,24 @@ const AppContextProvider = ({ children }) => {
             })
     }
 
-    const login = async (email, password) => await signInWithEmailAndPassword(auth, email, password);
+    useEffect(() => {
+
+        if (user) {
+            const doc = {
+                _id: user.uid,
+                _type: 'person',
+                name: user.displayName,
+                email: user.email,
+                id: user.uid
+            };
+            sanityClient.createIfNotExists(doc)
+
+        }
+    }, [user])
+
+
+
+    const login = async (email, password) => { await signInWithEmailAndPassword(auth, email, password) };
 
     const logout = () => signOut(auth);
 
