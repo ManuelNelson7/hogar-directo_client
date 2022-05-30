@@ -16,15 +16,37 @@ const Ingresar = () => {
 
   const router = useRouter();
 
-  let { signup, loginWithGoogle } = useContext(AppContext);
+  let { signup, loginWithGoogle, loginWithFacebook, loginWithTwitter } = useContext(AppContext);
 
   const handleChange = ({ target: { name, value } }) => {
     setUser({ ...user, [name]: value });
   }
 
   const handleGoogleSignUp = async () => {
-    await loginWithGoogle()
-    router.push("/")
+    try{
+      await loginWithGoogle()
+      router.push("/")
+    } catch {
+      setError("Error al ingresar con Google") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
+    }
+  }
+
+  const handleFacebookSignUp = async () => {
+    try{
+      await loginWithFacebook()
+      router.push("/")
+    } catch {
+      setError("Error al ingresar con Facebook") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
+    }
+  }
+
+  const handleTwitterSignUp = async () => {
+    try{
+      await loginWithTwitter()
+      router.push("/")
+    } catch {
+      setError("Error al ingresar con Twitter") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -172,7 +194,7 @@ const Ingresar = () => {
                   </a>
                 </div>
 
-                <div>
+                <div onClick={handleFacebookSignUp}>
                   <a
                     href="#"
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
@@ -188,7 +210,7 @@ const Ingresar = () => {
                   </a>
                 </div>
 
-                <div>
+                <div onClick={handleTwitterSignUp}>
                   <a
                     href="#"
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"

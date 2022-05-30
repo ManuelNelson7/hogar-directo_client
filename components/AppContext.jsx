@@ -6,7 +6,10 @@ import {
     signOut, updateProfile,
     GoogleAuthProvider,
     signInWithPopup,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    FacebookAuthProvider,
+    TwitterAuthProvider,
+    signInWithRedirect
 } from 'firebase/auth'
 import { auth } from '../config'
 import { sanityClient } from '../sanity'
@@ -49,6 +52,16 @@ const AppContextProvider = ({ children }) => {
         return signInWithPopup(auth, googleProvider);
     }
 
+    const loginWithFacebook = () => {
+        const facebookProvider = new FacebookAuthProvider();
+        return signInWithPopup(auth, facebookProvider);
+    }
+
+    const loginWithTwitter = () => {
+        const twitterProvider = new TwitterAuthProvider();
+        return signInWithPopup(auth, twitterProvider);
+    }
+
     const resetPassword = (email) => {
         sendPasswordResetEmail(auth, email);
     }
@@ -67,6 +80,8 @@ const AppContextProvider = ({ children }) => {
             login,
             logout,
             loginWithGoogle,
+            loginWithFacebook,
+            loginWithTwitter,
             resetPassword
         }}>
             {children}
