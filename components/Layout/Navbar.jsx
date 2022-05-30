@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState, useContext } from 'react'
-import { Popover, Transition } from '@headlessui/react'
+import { Menu, Popover, Transition } from '@headlessui/react'
 import {
     BookmarkAltIcon,
     CalendarIcon,
@@ -14,11 +14,18 @@ import {
     SupportIcon,
     ViewGridIcon,
     XIcon,
-    HomeIcon
+    HomeIcon,
+    UserCircleIcon
 } from '@heroicons/react/outline'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
 import { AppContext } from '../AppContext'
+
+const userNavigation = [
+    { name: 'Your Profile', href: '#' },
+    { name: 'Settings', href: '#' },
+    { name: 'Sign out', href: '#' },
+]
 
 const solutions = [
 
@@ -85,7 +92,7 @@ function classNames(...classes) {
 
 const Navbar = () => {
 
-    let { user } = useContext(AppContext)
+    let { user, logout } = useContext(AppContext)
 
     return (
         <>
@@ -251,7 +258,7 @@ const Navbar = () => {
                             <a href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                                 Publicar gratis
                             </a>
-                            {!user ? (
+                            {!user ?
                                 <Link href="/ingresar">
                                     <a
                                         className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-500 hover:bg-teal-600"
@@ -259,11 +266,40 @@ const Navbar = () => {
                                         Ingresar
                                     </a>
                                 </Link>
-                            ) : (<a
-                                className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700"
-                            >
-                                {`Hola ${user.displayName.split(' ')[0]}!`}
-                            </a>)
+                                :
+                                <Menu as="div" className="relative flex-shrink-0 ml-4">
+                                    <div>
+                                        <Menu.Button className="rounded-full flex text-sm text-white focus:outline-none focus:bg-sky-900 focus:ring-2 focus:ring-offset-2 focus:ring-offset-sky-900 focus:ring-white">
+                                            <img className="rounded-full h-8 w-8" src={user.photoURL || 'https://i.pinimg.com/originals/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg'} alt="" />
+                                        </Menu.Button>
+                                    </div>
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            <Link href='/perfil'>
+                                                <a className='block py-2 px-4 text-sm text-gray-700 cursor-pointer'>
+                                                    Mi perfil
+                                                </a>
+                                            </Link>
+                                            <Link href='/mi perfil'>
+                                                <a className='block py-2 px-4 text-sm text-gray-700 cursor-pointer'>
+                                                    Mis anuncios
+                                                </a>
+                                            </Link>
+                                            <button className='block py-2 px-4 text-sm text-gray-700' onClick={logout}>
+                                                Cerrar sesión
+                                            </button>
+
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
                             }
                         </div>
                     </div>

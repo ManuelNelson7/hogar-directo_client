@@ -8,7 +8,6 @@ import {
     signInWithPopup,
     sendPasswordResetEmail,
     FacebookAuthProvider,
-    TwitterAuthProvider,
     signInWithRedirect
 } from 'firebase/auth'
 import { auth } from '../config'
@@ -27,21 +26,19 @@ const AppContextProvider = ({ children }) => {
     }
 
     useEffect(() => {
-
         if (user) {
             const doc = {
                 _id: user.uid,
                 _type: 'person',
                 name: user.displayName,
                 email: user.email,
-                id: user.uid
+                id: user.uid,
+                image: user.photoURL,
             };
             sanityClient.createIfNotExists(doc)
 
         }
     }, [user])
-
-
 
     const login = async (email, password) => { await signInWithEmailAndPassword(auth, email, password) };
 
@@ -55,11 +52,6 @@ const AppContextProvider = ({ children }) => {
     const loginWithFacebook = () => {
         const facebookProvider = new FacebookAuthProvider();
         return signInWithPopup(auth, facebookProvider);
-    }
-
-    const loginWithTwitter = () => {
-        const twitterProvider = new TwitterAuthProvider();
-        return signInWithPopup(auth, twitterProvider);
     }
 
     const resetPassword = (email) => {
@@ -81,7 +73,6 @@ const AppContextProvider = ({ children }) => {
             logout,
             loginWithGoogle,
             loginWithFacebook,
-            loginWithTwitter,
             resetPassword
         }}>
             {children}
