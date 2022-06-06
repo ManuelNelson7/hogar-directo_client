@@ -8,14 +8,18 @@ import {
     signInWithPopup,
     sendPasswordResetEmail,
     FacebookAuthProvider,
-    signInWithRedirect
+    signInWithRedirect,
 } from 'firebase/auth'
 import { auth } from '../config'
 import { sanityClient } from '../sanity'
+import { useRouter } from "next/router"
 
 export const AppContext = createContext()
 
 const AppContextProvider = ({ children }) => {
+
+    const router = useRouter();
+
     const [user, setUser] = useState(null)
 
     const signup = async (email, password, name) => {
@@ -42,7 +46,10 @@ const AppContextProvider = ({ children }) => {
 
     const login = async (email, password) => { await signInWithEmailAndPassword(auth, email, password) };
 
-    const logout = () => signOut(auth);
+    const logout = () => {
+        signOut(auth)
+        router.push("/")
+    };
 
     const loginWithGoogle = () => {
         const googleProvider = new GoogleAuthProvider();
