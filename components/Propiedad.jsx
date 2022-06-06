@@ -3,13 +3,11 @@ import Image from './Image/Image'
 import GalleryImage from './Image/GalleryImage'
 import { MailIcon } from '@heroicons/react/solid'
 import { RiWhatsappFill } from 'react-icons/ri'
-import Map from './Map'
 import ProfilePic from './Image/ProfilePic'
 import MainImage from './Image/MainImage'
+import dynamic from "next/dynamic";
 
-const PropiedadDetails = ({
-    title,
-    location,
+export default function PropiedadDetails( title,
     propertyType,
     mainImage,
     images,
@@ -19,8 +17,12 @@ const PropiedadDetails = ({
     bathrooms,
     descripcion,
     modalidad,
-    owner
-}) => {
+    owner){
+
+
+    const MapWithNoSSR = dynamic(() => import("./Map"), {
+        ssr: false
+    });
 
     return (
         <div className="bg-white">
@@ -70,7 +72,7 @@ const PropiedadDetails = ({
                                 <section aria-labelledby="details-heading" className="mt-6">
                                     <h3 className="text-2xl font-bold tracking-tight text-gray-900">Ubicación</h3>
                                     <div className='mt-4'>
-                                        <Map location={location}></Map>
+                                        <MapWithNoSSR />
                                     </div>
                                 </section>
                             </div>
@@ -162,5 +164,3 @@ const PropiedadDetails = ({
         </div>
     )
 }
-
-export default PropiedadDetails
