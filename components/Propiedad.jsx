@@ -66,13 +66,6 @@ const PropiedadDetails = ({
                                         dangerouslySetInnerHTML={{ __html: descripcion }}
                                     />
                                 </section>
-
-                                <section aria-labelledby="details-heading" className="mt-6">
-                                    <h3 className="text-2xl font-bold tracking-tight text-gray-900">Ubicación</h3>
-                                    <div className='mt-4'>
-                                        <Map location={location}></Map>
-                                    </div>
-                                </section>
                             </div>
 
                             <div className="form mt-4 md:mt-0">
