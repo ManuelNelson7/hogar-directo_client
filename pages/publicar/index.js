@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../components/AppContext'
 import Layout from '../../components/Layout/Layout'
+import { sanityClient } from '../../sanity'
 
 const Publicar = () => {
     let { user } = useContext(AppContext)
@@ -55,6 +56,49 @@ const Publicar = () => {
                                                 <p className="mt-2 text-sm text-gray-500">
                                                     Breve descripción de tu propiedad y requisitos para entrar a tu propiedad, como por ejemplo: no acepto mascotas, solo acepto personas mayores de edad, etc.
                                                 </p>
+                                            </div>
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Dirección de la propiedad
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="address"
+                                                    id="address"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='Campichuelo #123'
+                                                />
+                                            </div>
+
+                                            {/*  INPUT PARA TIPO DE PROPIEDAD   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Tipo de propiedad
+                                                </label>
+                                                <select name="property-type" id="property-type">
+                                                    <option value="house">Casa</option>
+                                                    <option value="departamento">Departamento</option>
+                                                    <option value="ph">PH</option>
+                                                    <option value="quinta">Quinta</option>
+                                                    <option value="garage">Garage</option>
+                                                    <option value="oficina">Oficina comercial</option>
+                                                    <option value="local">Local comercial</option>
+                                                    <option value="terreno">Terreno</option>
+                                                </select>
+                                            </div>
+
+                                            {/*  INPUT PARA MODALIDAD   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Tipo de operación
+                                                </label>
+                                                <label htmlFor="modalidad-alq">Alquilar</label>
+                                                <input type="radio" name="modalidad" id="modalidad-alq" value="Alquilar"/>
+                                                <label htmlFor="modalidad-vnd">Vender</label>
+                                                <input type="radio" name="modalidad" id="modalidad-vnd" value="Vender"/>
                                             </div>
 
                                             <div>
@@ -121,6 +165,140 @@ const Publicar = () => {
                                                         <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
                                                     </div>
                                                 </div>
+                                            </div>
+
+                                            {/*  INPUT PARA PRECIO   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Precio
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="price"
+                                                    id="price"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='35.000'
+                                                />
+                                                {/*  acá hay que hacer algo para especificar
+                                                si es USD  o ARS   */}
+                                            </div>
+
+                                            {/*  INPUT PARA EXPENSAS   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Expensas
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="expensas"
+                                                    id="expensas"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='5.000'
+                                                />
+                                                {/*  este tiene que ser totalmente opcional  */}
+                                            </div>
+
+                                            {/*  INPUT PARA AMBIENTES   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Ambientes
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="ambientes"
+                                                    id="ambientes"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='2'
+                                                />
+                                                {/*  aca hay que ver pq capaz algunas propiedades
+                                                    son 1 ambiente y medio o asi, capaz conviene
+                                                    cambiar el input a 'text'  */}
+                                            </div>
+
+                                            {/*  INPUT PARA BAÑOS   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Baños
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="bathrooms"
+                                                    id="bathrooms"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='1'
+                                                />
+                                            </div>
+
+                                            {/*  INPUT PARA DORMITORIOS   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Dormitorios
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="bedrooms"
+                                                    id="bedrooms"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='1'
+                                                />
+                                            </div>
+
+                                            {/*  INPUT PARA SUPERFICIE CUBIERTA   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Superficie cubierta
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="superficie"
+                                                    id="superficie"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='25'
+                                                />{/*m2*/}
+                                            </div>
+
+                                            {/*  INPUT PARA SUPERFICIE TOTAL   */}
+
+                                            <div className="col-span-6 sm:col-span-3">
+                                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                                                    Superficie total
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    name="totalSuperficie"
+                                                    id="totalSuperficie"
+                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder='38'
+                                                />{/*m2*/}
+                                            </div>
+
+                                            <div className="px-4 py-3 text-right sm:px-6">
+                                                <button
+                                                    type="submit"
+                                                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                                    onClick={useEffect(() => {
+                                                                if (user) {
+                                                                    const doc = {
+                                                                        _id: user.uid,
+                                                                        _type: 'property',
+                                                                        name: user.displayName,
+                                                                        email: user.email,
+                                                                        id: user.uid,
+                                                                        image: user.photoURL,
+                                                                    };
+                                                                    sanityClient.createIfNotExists(doc)
+
+                                                                }
+                                                            }, [user])}
+                                                >
+                                                    Publicar
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
