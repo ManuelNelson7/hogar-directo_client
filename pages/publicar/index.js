@@ -310,7 +310,16 @@ const Publicar = () => {
                                                             alert('3')
                                                         }}
                                                     }
-                                                    /* revisa esto gordis a ver si a vos te sale https://www.sanity.io/docs/js-client*/
+                                                    /* 
+
+                                                    ERRORES A RESOLVER:
+                                                    -PASAR TODOS LOS CAMPOS CORRECTAMENTE: FALTA SLUG
+                                                    -VER COMO HACER QUE LOS VALUE DE LOS INPUTS VAYAN
+                                                        AL DOC QUE SE PASA A SANITY
+                                                    
+                                                    revisa esto gordis a ver si a vos te sale https://www.sanity.io/docs/js-client
+                                                    
+                                                    */
                                                 >
                                                     Publicar
                                                 </button>
