@@ -282,23 +282,40 @@ const Publicar = () => {
                                                 <button
                                                     type="submit"
                                                     className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                                                    onClick={useEffect(() => {
-                                                                if (user) {
-                                                                    const doc = {
-                                                                        _id: user.uid,
-                                                                        _type: 'property',
-                                                                        name: user.displayName,
-                                                                        email: user.email,
-                                                                        id: user.uid,
-                                                                        image: user.photoURL,
-                                                                    };
-                                                                    sanityClient.createIfNotExists(doc)
-
-                                                                }
-                                                            }, [user])}
+                                                    onClick={(e) => {
+                                                        e.preventDefault()
+                                                        if (user) {
+                                                            const doc = {
+                                                                _id: '85',
+                                                                _type: 'property',
+                                                                title: 'titulo',
+                                                                address: 'direccion',
+                                                                propertyType: 'house',
+                                                                modalidad: 'alquilar',
+                                                                price: 35.000,
+                                                                expensas: 5.000,
+                                                                ambientes: 2,
+                                                                bathrooms: 1,
+                                                                bedrooms: 1,
+                                                                superficie: 25,
+                                                                totalSuperficie: 38,
+                                                                descripcion: 'descripcion',
+                                                                owner: user.uid
+                                                            };
+                                                            sanityClient.createIfNotExists(doc).then((res) => {
+                                                                alert(res)
+                                                            }).catch((err) => {console.log(err.message)})
+                                                        } 
+                                                        else {
+                                                            alert('3')
+                                                        }}
+                                                    }
+                                                    /* revisa esto gordis a ver si a vos te sale https://www.sanity.io/docs/js-client*/
                                                 >
                                                     Publicar
                                                 </button>
+
+
                                             </div>
                                         </div>
                                     </div>
