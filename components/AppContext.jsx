@@ -73,7 +73,7 @@ const AppContextProvider = ({ children }) => {
             logout,
             loginWithGoogle,
             loginWithFacebook,
-            resetPassword
+            resetPassword,
         }}>
             {children}
         </AppContext.Provider>

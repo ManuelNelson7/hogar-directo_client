@@ -149,7 +149,7 @@ const Perfil = () => {
                                                     </div>
 
                                                     <div className="hidden relative rounded-full overflow-hidden lg:block">
-                                                        <img className="relative rounded-full w-40 h-40" src={user.photoURL} alt="" />
+                                                        <img className="relative rounded-full w-40 h-40" src={user.photoURL || 'https://i.pinimg.com/originals/65/25/a0/6525a08f1df98a2e3a545fe2ace4be47.jpg'} alt="" />
                                                         <label
                                                             htmlFor="desktop-user-photo"
                                                             className="absolute inset-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center text-sm font-medium text-white opacity-0 hover:opacity-100 focus-within:opacity-100"

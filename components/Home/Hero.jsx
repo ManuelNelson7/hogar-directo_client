@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { propertyTypes } from "../../utils/utils"
 
 const Hero = () => {
     const [buyOrRent, setBuyOrRent] = useState("alquilar")
@@ -8,17 +9,6 @@ const Hero = () => {
         buyOrRent === 'alquilar' && setImageCover("https://images.pexels.com/photos/3288102/pexels-photo-3288102.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
         buyOrRent === 'comprar' && setImageCover("https://images.pexels.com/photos/3288103/pexels-photo-3288103.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
     }, [buyOrRent])
-
-    const propertyTypes = [
-        { title: 'Casa', value: 'house' },
-        { title: 'Departamento', value: 'departamento' },
-        { title: 'PH', value: 'ph' },
-        { title: 'Quinta', value: 'quinta' },
-        { title: 'Garage', value: 'garage' },
-        { title: 'Oficina comercial', value: 'oficina' },
-        { title: 'Local comercial', value: 'local' },
-        { title: 'Terreno', value: 'terreno' },
-    ]
 
     return (
         <div className="bg-white">

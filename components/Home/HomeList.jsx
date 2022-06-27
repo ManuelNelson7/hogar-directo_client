@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from '../Image/Image'
 import Link from 'next/link'
-import { formatPrice, homeQuery } from '../../utils'
+import { formatPrice, homeQuery } from '../../utils/utils'
 import { sanityClient } from '../../sanity'
 
 const HomeList = () => {

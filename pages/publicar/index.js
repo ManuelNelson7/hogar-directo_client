@@ -1,17 +1,22 @@
+import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../components/AppContext'
 import Layout from '../../components/Layout/Layout'
 import { sanityClient } from '../../sanity'
+import { propertyTypes, provinciasOrdered, fetchDepartamentos } from '../../utils/utils'
 
 const Publicar = () => {
+    const [departamentos, setDepartamentos] = useState([])
     let { user } = useContext(AppContext)
 
     const [formData, setFormData] = useState(
         {
-            title: "", 
-            description: "", 
-            address: "", 
-            propType: "", 
+            title: "",
+            description: "",
+            provincia: "",
+            zona: "",
+            address: "",
+            propType: "",
             modalidad: "",
             price: "",
             currency: "",
@@ -24,23 +29,9 @@ const Publicar = () => {
             supTotal: ""
         }
     )
-    console.log(formData.title)
-    console.log(formData.description)
-    console.log(formData.address)
-    console.log(formData.propType)
-    console.log(formData.modalidad)
-    console.log(formData.price)
-    console.log(formData.currency)
-    console.log(formData.expensasDisplay)
-    console.log(formData.expensas)
-    console.log(formData.ambientes)
-    console.log(formData.bathrooms)
-    console.log(formData.bedrooms)
-    console.log(formData.supCubierta)
-    console.log(formData.supTotal)
-    
+
     function handleChange(event) {
-        const {name, value, type, checked} = event.target
+        const { name, value, type, checked } = event.target
         setFormData(prevFormData => {
             return {
                 ...prevFormData,
@@ -75,12 +66,17 @@ const Publicar = () => {
             sanityClient.createIfNotExists(doc).then((res) => {
                 alert("Tu anuncio fue enviado a revisión, si cumple los requisitos pronto podrás verlo publicado!")
                 /*aca hay que hacer que los campos del formulrio se vacien una vez se envie y hay que hacer que redirija al inicio */
-            }).catch((err) => {console.log(err.message)})
-        } 
+            }).catch((err) => { console.log(err.message) })
+        }
         else {
             alert('3') /*este es de prueba por si no hay user, puede eliminarse o hay q ver q odna */
         }
     }
+
+    useEffect(() => {
+        setDepartamentos(fetchDepartamentos(formData.provincia))
+
+    }, [formData.provincia])
 
 
     return (
@@ -137,6 +133,46 @@ const Publicar = () => {
                                                 </p>
                                             </div>
 
+                                            <div className='grid grid-cols-2 gap-3'>
+                                                <div>
+                                                    <label htmlFor="propType" className="block text-sm font-medium text-gray-700">
+                                                        Provincia
+                                                    </label>
+                                                    <select
+                                                        value={formData.provincia}
+                                                        onChange={handleChange}
+                                                        name="provincia"
+                                                        id="provincia"
+                                                        className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                    >
+                                                        {provinciasOrdered.map(provincia => (
+                                                            <option key={provincia.nombre} value={provincia.id}>{provincia.nombre}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label htmlFor="zona" className="block text-sm font-medium text-gray-700">
+                                                        Tipo de propiedad
+                                                    </label>
+                                                    <select
+                                                        value={formData.zona}
+                                                        onChange={handleChange}
+                                                        name="zona"
+                                                        id="zona"
+                                                        defaultValue="departamento"
+                                                        className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                    >
+                                                        {departamentos.length && departamentos.map(departamento => (
+                                                            <option key={departamento.nombre} value={departamento.nombre}>{departamento.nombre}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+
+                                            </div>
+
+
                                             <div className="col-span-6 sm:col-span-3">
                                                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                                                     Dirección de la propiedad
@@ -158,15 +194,17 @@ const Publicar = () => {
                                                 <label htmlFor="propType" className="block text-sm font-medium text-gray-700">
                                                     Tipo de propiedad
                                                 </label>
-                                                <select value={formData.propType} onChange={handleChange} name="propType" id="propType">
-                                                    <option value="house">Casa</option>
-                                                    <option value="departamento">Departamento</option>
-                                                    <option value="ph">PH</option>
-                                                    <option value="quinta">Quinta</option>
-                                                    <option value="garage">Garage</option>
-                                                    <option value="oficina">Oficina comercial</option>
-                                                    <option value="local">Local comercial</option>
-                                                    <option value="terreno">Terreno</option>
+                                                <select
+                                                    value={formData.propType}
+                                                    onChange={handleChange}
+                                                    name="propType"
+                                                    id="propType"
+                                                    defaultValue="departamento"
+                                                    className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                >
+                                                    {propertyTypes.map(propertyType => (
+                                                        <option key={propertyType.value} value={propertyType.value}>{propertyType.title}</option>
+                                                    ))}
                                                 </select>
                                             </div>
 
@@ -254,33 +292,43 @@ const Publicar = () => {
 
                                             {/*  INPUT PARA PRECIO   */}
 
-                                            <div className="flex">
-                                                <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                                                    Precio
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    name="price"
-                                                    id="price"
-                                                    value={formData.price}
-                                                    onChange={handleChange}
-                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    placeholder='35.000'
-                                                />
+                                            <div className="grid gap-3 grid-cols-2">
+                                                <div>
+                                                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                                                        Precio
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        name="price"
+                                                        id="price"
+                                                        value={formData.price}
+                                                        onChange={handleChange}
+                                                        className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        placeholder='Ejemplo: 35000 (sin puntos ni comas)'
+                                                    />
+                                                </div>
 
                                                 {/*  INPUT PARA MONEDA   */}
-
-                                                <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
-                                                    Moneda
-                                                </label>
-                                                <select value={formData.currency} onChange={handleChange} name="currency" id="currency">
-                                                    <option value="ARS">Pesos</option>
-                                                    <option value="USD">Dólares</option>
-                                                </select>
-                                                {/*<label htmlFor="currency-ars">ARS</label>
+                                                <div>
+                                                    <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
+                                                        Moneda
+                                                    </label>
+                                                    <select
+                                                        value={formData.currency}
+                                                        onChange={handleChange}
+                                                        name="currency"
+                                                        id="currency"
+                                                        className="block mt-1 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                    >
+                                                        <option value="ARS">Pesos</option>
+                                                        <option value="USD">Dólares</option>
+                                                    </select>
+                                                    {/*<label htmlFor="currency-ars">ARS</label>
                                                 <input type="radio" name="currency" id="currency-ars" value="ARS" onChange={handleChange}/>
                                                 <label htmlFor="currency-usd">USD</label>
                                                 <input type="radio" name="currency" id="currency-usd" value="USD" onChange={handleChange}/>*/}
+                                                </div>
+
                                             </div>
 
                                             {/*  INPUT PARA EXPENSAS   */}
@@ -293,63 +341,62 @@ const Publicar = () => {
                                                     checked={formData.expensasDisplay}
                                                     onChange={handleChange}
                                                 />
-                                                <label htmlFor="expensasDisplay">
+                                                <label htmlFor="expensasDisplay" className='ml-2'>
                                                     Tiene expensas?
                                                 </label>
-                                            </div>
-                                            {formData.expensasDisplay === true && (
-                                                <div className="col-span-6 sm:col-span-3">
-                                                <label htmlFor="expensas" className="block text-sm font-medium text-gray-700">
-                                                    Expensas
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    name="expensas"
-                                                    id="expensas"
-                                                    value={formData.expensas}
-                                                    onChange={handleChange}
-                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    placeholder='5.000'
-                                                />
-                                            </div>
-                                            )}
-                                            
-                                            {/*  INPUT PARA AMBIENTES   */}
-
-                                            <div className="col-span-6 sm:col-span-3">
-                                                <label htmlFor="ambientes" className="block text-sm font-medium text-gray-700">
-                                                    Ambientes
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    name="ambientes"
-                                                    id="ambientes"
-                                                    value={formData.ambientes}
-                                                    onChange={handleChange}
-                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    placeholder='2'
-                                                />
-                                                {/*  aca hay que ver pq capaz algunas propiedades
-                                                    son 1 ambiente y medio o asi, capaz conviene
-                                                    cambiar el input a 'text'  */}
+                                                {formData.expensasDisplay === true && (
+                                                    <div className="col-span-6 mt-2 sm:col-span-3">
+                                                        <label htmlFor="expensas" className="block text-sm font-medium text-gray-700">
+                                                            Expensas
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            name="expensas"
+                                                            id="expensas"
+                                                            value={formData.expensas}
+                                                            onChange={handleChange}
+                                                            className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                            placeholder='Ejemplo: 4500 (sin puntos ni comas)'
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
 
-                                            {/*  INPUT PARA BAÑOS   */}
 
-                                            <div className="col-span-6 sm:col-span-3">
-                                                <label htmlFor="bathrooms" className="block text-sm font-medium text-gray-700">
-                                                    Baños
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    name="bathrooms"
-                                                    id="bathrooms"
-                                                    value={formData.bathrooms}
-                                                    onChange={handleChange}
-                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    placeholder='1'
-                                                />
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {/*  INPUT PARA AMBIENTES   */}
+                                                <div>
+                                                    <label htmlFor="ambientes" className="block text-sm font-medium text-gray-700">
+                                                        Ambientes
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        name="ambientes"
+                                                        id="ambientes"
+                                                        value={formData.ambientes}
+                                                        onChange={handleChange}
+                                                        className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        placeholder='2'
+                                                    />
+                                                </div>
+
+                                                {/*  INPUT PARA BAÑOS   */}
+                                                <div>
+                                                    <label htmlFor="bathrooms" className="block text-sm font-medium text-gray-700">
+                                                        Baños
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        name="bathrooms"
+                                                        id="bathrooms"
+                                                        value={formData.bathrooms}
+                                                        onChange={handleChange}
+                                                        className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        placeholder='1'
+                                                    />
+                                                </div>
                                             </div>
+
 
                                             {/*  INPUT PARA DORMITORIOS   */}
 
@@ -407,15 +454,15 @@ const Publicar = () => {
                                                     type="submit"
                                                     className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
                                                     onClick={publicarPropiedad}
-                                                    /* 
+                                                /* 
 
-                                                    ERRORES A RESOLVER:
-                                                    -PASAR TODOS LOS CAMPOS CORRECTAMENTE: FALTA SLUG y OWNER
-                                                    -FIJARSE QUE ONDA COMO PASAR LOS INPUT IMGS
-                                                    
-                                                    DOCS: https://www.sanity.io/docs/js-client
-                                                    
-                                                    */
+                                                ERRORES A RESOLVER:
+                                                -PASAR TODOS LOS CAMPOS CORRECTAMENTE: FALTA SLUG y OWNER
+                                                -FIJARSE QUE ONDA COMO PASAR LOS INPUT IMGS
+                                                
+                                                DOCS: https://www.sanity.io/docs/js-client
+                                                
+                                                */
                                                 >
                                                     Publicar
                                                 </button>
