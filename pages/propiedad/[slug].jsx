@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Layout from '../../components/Layout/Layout'
 import PropiedadDetails from '../../components/Propiedad'
 import { sanityClient } from '../../sanity'
-import { propertyQuery } from '../../utils'
+import { propertyQuery } from '../../utils/utils'
 import { useRouter } from 'next/router'
 
 const Property = () => {

@@ -1,4 +1,4 @@
-import { formatPrice, isMultiple } from '../utils'
+import { isMultiple, formatPrice } from '../utils/utils'
 import Image from './Image/Image'
 import GalleryImage from './Image/GalleryImage'
 import { MailIcon } from '@heroicons/react/solid'
