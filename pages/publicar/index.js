@@ -9,6 +9,53 @@ const Publicar = () => {
     const [departamentos, setDepartamentos] = useState([])
     let { user } = useContext(AppContext)
 
+    
+    /* https://www.section.io/engineering-education/uploading-deleting-and-downloading-images-uploaded-to-sanity-io/  */
+    const [imagesAssets, setImagesAssets] = useState(null);
+    const [wrongTypeofImage, setWrongTypeofImage] = useState(false);
+    const [setField] = useState();
+
+    const uploadImage = (e) => {
+        const selectedImage = e.target.files[0];
+            //to input an image to the upload field
+        if (selectedImage.type === 'image/png' || selectedImage.type === 'image/svg' || selectedImage.type === 'image/jpeg' || selectedImage.type === 'image/gif' || selectedImage.type === 'image/tiff') {
+            setWrongTypeofImage(false);
+            sanityClient.assets
+            .upload('image', selectedImage, { contentType: selectedImage.type, filename: selectedImage.name })
+            .then((document) => {
+                setImagesAssets(document);
+            })
+            .catch((error) => {
+                console.log('Upload failed:', error.message);
+            });
+        } else {
+            setWrongTypeofImage(true);
+        }
+    };
+
+    const saveImage = () => {
+        if (imagesAssets?._id) {
+          const doc = {
+            _type: "photo",
+            image: {
+              _type: "image",
+              asset: {
+                _type: "reference",
+                _ref: imagesAssets?._id,
+              },
+            },
+          };
+          sanityClient.createIfNotExists(doc).then(() => {
+            alert("Tu anuncio fue enviado a revisión, si cumple los requisitos pronto podrás verlo publicado!")
+          });
+        } else {
+          setField(true);
+          setTimeout(() => {
+            setField(false);
+          }, 2000);
+        }
+    };
+
     const [formData, setFormData] = useState(
         {
             title: "",
@@ -116,6 +163,7 @@ const Publicar = () => {
                                                     onChange={handleChange}
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='Departamento en el centro de la ciudad'
+                                                    required
                                                 />
                                             </div>
 
@@ -132,6 +180,7 @@ const Publicar = () => {
                                                         rows={3}
                                                         className="shadow-sm mt-1 py-1 block w-full sm:text-sm border-2 px-2 border-gray-300 rounded-md"
                                                         placeholder="Departamento en el centro de la ciudad con una vista privilegiada a la playa. Posee una amplia zona de jardín."
+                                                        required
                                                     />
                                                 </div>
                                                 <p className="mt-2 text-sm text-gray-500">
@@ -150,6 +199,7 @@ const Publicar = () => {
                                                         name="provincia"
                                                         id="provincia"
                                                         className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                        required
                                                     >
                                                         {provinciasOrdered.map(provincia => (
                                                             <option key={provincia.nombre} value={provincia.id}>{provincia.nombre}</option>
@@ -168,6 +218,7 @@ const Publicar = () => {
                                                         id="zona"
                                                         defaultValue="departamento"
                                                         className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                        required
                                                     >
                                                         {departamentos.length && departamentos.map(departamento => (
                                                             <option key={departamento.nombre} value={departamento.nombre}>{departamento.nombre}</option>
@@ -191,6 +242,7 @@ const Publicar = () => {
                                                     onChange={handleChange}
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='Campichuelo #123'
+                                                    required
                                                 />
                                             </div>
 
@@ -207,6 +259,7 @@ const Publicar = () => {
                                                     id="propType"
                                                     defaultValue="departamento"
                                                     className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                    required
                                                 >
                                                     {propertyTypes.map(propertyType => (
                                                         <option key={propertyType.value} value={propertyType.value}>{propertyType.title}</option>
@@ -220,7 +273,7 @@ const Publicar = () => {
                                                 <label htmlFor="modalidad" className="block text-sm font-medium text-gray-700">
                                                     Tipo de operación
                                                 </label>
-                                                <select value={formData.modalidad} onChange={handleChange} name="modalidad" id="modalidad">
+                                                <select value={formData.modalidad} onChange={handleChange} name="modalidad" id="modalidad" required>
                                                     <option value="alquilar">Alquilar</option>
                                                     <option value="vender">Vender</option>
                                                 </select>
@@ -312,6 +365,7 @@ const Publicar = () => {
                                                         onChange={handleChange}
                                                         className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         placeholder='Ejemplo: 35000 (sin puntos ni comas)'
+                                                        required
                                                     />
                                                 </div>
 
@@ -326,6 +380,7 @@ const Publicar = () => {
                                                         name="currency"
                                                         id="currency"
                                                         className="block mt-1 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
+                                                        required
                                                     >
                                                         <option value="ARS">Pesos</option>
                                                         <option value="USD">Dólares</option>
@@ -364,6 +419,7 @@ const Publicar = () => {
                                                             onChange={handleChange}
                                                             className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                             placeholder='Ejemplo: 4500 (sin puntos ni comas)'
+                                                            required
                                                         />
                                                     </div>
                                                 )}
@@ -384,6 +440,7 @@ const Publicar = () => {
                                                         onChange={handleChange}
                                                         className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         placeholder='2'
+                                                        required
                                                     />
                                                 </div>
 
@@ -400,6 +457,7 @@ const Publicar = () => {
                                                         onChange={handleChange}
                                                         className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         placeholder='1'
+                                                        required
                                                     />
                                                 </div>
                                             </div>
@@ -419,6 +477,7 @@ const Publicar = () => {
                                                     onChange={handleChange}
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='1'
+                                                    required
                                                 />
                                             </div>
 
@@ -426,7 +485,7 @@ const Publicar = () => {
 
                                             <div className="col-span-6 sm:col-span-3">
                                                 <label htmlFor="superficie" className="block text-sm font-medium text-gray-700">
-                                                    Superficie cubierta
+                                                    Superficie cubierta (m2)
                                                 </label>
                                                 <input
                                                     type="number"
@@ -436,6 +495,7 @@ const Publicar = () => {
                                                     onChange={handleChange}
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='25'
+                                                    required
                                                 />{/*esto tiene q estar en m2*/}
                                             </div>
 
@@ -443,7 +503,7 @@ const Publicar = () => {
 
                                             <div className="col-span-6 sm:col-span-3">
                                                 <label htmlFor="totalSuperficie" className="block text-sm font-medium text-gray-700">
-                                                    Superficie total
+                                                    Superficie total (m2)
                                                 </label>
                                                 <input
                                                     type="number"
@@ -453,6 +513,7 @@ const Publicar = () => {
                                                     onChange={handleChange}
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='38'
+                                                    required
                                                 />{/*esto tiene q estar en m2*/}
                                             </div>
 
