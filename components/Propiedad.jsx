@@ -66,6 +66,8 @@ const PropiedadDetails = ({
                                         dangerouslySetInnerHTML={{ __html: descripcion }}
                                     />
                                 </section>
+
+                                {location && <Map location={location} />}
                             </div>
 
                             <div className="form mt-4 md:mt-0">
