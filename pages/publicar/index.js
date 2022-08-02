@@ -1,58 +1,83 @@
-import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../components/AppContext'
 import Layout from '../../components/Layout/Layout'
 import { sanityClient } from '../../sanity'
 import { propertyTypes, provinciasOrdered, fetchDepartamentos } from '../../utils/utils'
+import { useRouter } from 'next/router'
 
 const Publicar = () => {
     const [departamentos, setDepartamentos] = useState([])
     let { user } = useContext(AppContext)
 
-    
+
     /* https://www.section.io/engineering-education/uploading-deleting-and-downloading-images-uploaded-to-sanity-io/  */
-    const [imagesAssets, setImagesAssets] = useState(null);
-    const [wrongTypeofImage, setWrongTypeofImage] = useState(false);
+    const [imageAsset, setImageAsset] = useState(null);
+    const [imagesArray, setImagesArray] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [wrongImageType, setWrongImageType] = useState(false);
     const [setField] = useState();
+    const router = useRouter()
 
     const uploadImage = (e) => {
         const selectedImage = e.target.files[0];
-            //to input an image to the upload field
+        //to input an image to the upload field
         if (selectedImage.type === 'image/png' || selectedImage.type === 'image/svg' || selectedImage.type === 'image/jpeg' || selectedImage.type === 'image/gif' || selectedImage.type === 'image/tiff') {
-            setWrongTypeofImage(false);
+            setWrongImageType(false);
+            setLoading(true);
             sanityClient.assets
-            .upload('image', selectedImage, { contentType: selectedImage.type, filename: selectedImage.name })
-            .then((document) => {
-                setImagesAssets(document);
-            })
-            .catch((error) => {
-                console.log('Upload failed:', error.message);
-            });
+                .upload('image', selectedImage, { contentType: selectedImage.type, filename: selectedImage.name })
+                .then((document) => {
+                    setImageAsset(document);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.log('Upload failed:', error.message);
+                });
         } else {
-            setWrongTypeofImage(true);
+            setWrongImageType(true);
+        }
+    };
+
+    const uploadImageArray = (e) => {
+        const selectedImage = e.target.files[0];
+        //to input an image to the upload field
+        if (selectedImage.type === 'image/png' || selectedImage.type === 'image/svg' || selectedImage.type === 'image/jpeg' || selectedImage.type === 'image/gif' || selectedImage.type === 'image/tiff') {
+            setWrongImageType(false);
+            setLoading(true);
+            sanityClient.assets
+                .upload('image', selectedImage, { contentType: selectedImage.type, filename: selectedImage.name })
+                .then((document) => {
+                    setImagesArray(...imagesArray, document);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.log('Upload failed:', error.message);
+                });
+        } else {
+            setWrongImageType(true);
         }
     };
 
     const saveImage = () => {
-        if (imagesAssets?._id) {
-          const doc = {
-            _type: "photo",
-            image: {
-              _type: "image",
-              asset: {
-                _type: "reference",
-                _ref: imagesAssets?._id,
-              },
-            },
-          };
-          sanityClient.createIfNotExists(doc).then(() => {
-            alert("Tu anuncio fue enviado a revisión, si cumple los requisitos pronto podrás verlo publicado!")
-          });
+        if (imageAsset?._id) {
+            const doc = {
+                _type: "photo",
+                image: {
+                    _type: "image",
+                    asset: {
+                        _type: "reference",
+                        _ref: imageAsset?._id,
+                    },
+                },
+            };
+            sanityClient.createIfNotExists(doc).then(() => {
+                alert("Tu anuncio fue enviado a revisión, si cumple los requisitos pronto podrás verlo publicado!")
+            });
         } else {
-          setField(true);
-          setTimeout(() => {
-            setField(false);
-          }, 2000);
+            setField(true);
+            setTimeout(() => {
+                setField(false);
+            }, 2000);
         }
     };
 
@@ -60,21 +85,20 @@ const Publicar = () => {
         {
             title: "",
             description: "",
-            provincia: "",
-            zona: "",
+            provincia: "06",
+            zona: "25 de Mayo",
             address: "",
-            propType: "",
-            modalidad: "",
+            propType: "casa",
+            modalidad: "alquilar",
             price: "",
-            currency: "",
+            currency: "pesos",
             expensasDisplay: false,
-            expensas: "",
+            expensas: 0,
             ambientes: "",
             bathrooms: "",
             bedrooms: "",
             supCubierta: "",
             supTotal: "",
-            mainImage: {}
         }
     )
 
@@ -91,44 +115,50 @@ const Publicar = () => {
     const publicarPropiedad = (e) => {
         e.preventDefault()
         console.log(formData)
-        // if (user) {
-        //     const doc = {
-        //         _id: '6',
-        //         _type: 'property',
-        //         title: formData.title,
-        //         address: formData.address,
-        //         propertyType: formData.propType,
-        //         modalidad: formData.modalidad,
-        //         price: parseInt(formData.price),
-        //         currency: parseInt(formData.currency),
-        //         expensas: parseInt(formData.expensas),
-        //         ambientes: parseInt(formData.ambientes),
-        //         bathrooms: parseInt(formData.bathrooms),
-        //         bedrooms: parseInt(formData.bedrooms),
-        //         superficie: parseInt(formData.supCubierta),
-        //         totalSuperficie: parseInt(formData.supTotal),
-        //         descripcion: formData.description,
-        //         status: 'EN REVISION',
-        //         owner: user.uid, /*aca esta pasando el user ID, no lo reconoce en sanity, hay q ver q onda */
-        //         slug: formData.title.toLowerCase().replace(/ /g, "-") /* esto no lo reconoce sanity como "type slug" */
-        //     };
-        //     sanityClient.createIfNotExists(doc).then((res) => {
-        //         alert("Tu anuncio fue enviado a revisión, si cumple los requisitos pronto podrás verlo publicado!")
-        //         /*aca hay que hacer que los campos del formulrio se vacien una vez se envie y hay que hacer que redirija al inicio */
-        //     }).catch((err) => { console.log(err.message) })
-        // }
-        // else {
-        //     alert('3') /*este es de prueba por si no hay user, puede eliminarse o hay q ver q odna */
-        // }
-    }
+        if (user && formData.title && formData.description && formData.provincia && formData.zona && formData.address && formData.propType && formData.modalidad && formData.price && formData.currency && formData.ambientes && formData.bathrooms && formData.bedrooms && formData.supCubierta && formData.supTotal) {
+            const idDoc = formData.title.toLowerCase().replace(/ /g, "-") + Math.random().toString(36).substring(2, 15);
+            const doc = {
+                _id: idDoc,
+                _type: 'property',
+                title: formData.title,
+                address: formData.address,
+                propertyType: formData.propType,
+                modalidad: formData.modalidad,
+                price: parseInt(formData.price),
+                currency: parseInt(formData.currency),
+                expensas: parseInt(formData.expensas),
+                ambientes: parseInt(formData.ambientes),
+                bathrooms: parseInt(formData.bathrooms),
+                bedrooms: parseInt(formData.bedrooms),
+                superficie: parseInt(formData.supCubierta),
+                totalSuperficie: parseInt(formData.supTotal),
+                descripcion: formData.description,
+                status: 'EN REVISION',
+                owner: user.uid, /*aca esta pasando el user ID, no lo reconoce en sanity, hay q ver q onda */
+                mainImage: {
+                    _type: 'image',
+                    asset: {
+                        _type: 'reference',
+                        _ref: imageAsset?._id,
+                    }
+                },
+                slug: idDoc /* esto no lo reconoce sanity como "type slug" */
+            };
 
-    const handleSubmit = () => {
-        console.log(formData)
+            sanityClient.createIfNotExists(doc).then(() => {
+                router.push('/')
+            }).catch((err) => { console.log(err.message) })
+        }
     }
 
     useEffect(() => {
-        setDepartamentos(fetchDepartamentos(formData.provincia))
+        console.log(imagesArray)
+    }, [imagesArray])
 
+    useEffect(() => {
+        formData.provincia ?
+            setDepartamentos(fetchDepartamentos(formData.provincia))
+            : setDepartamentos(fetchDepartamentos('06'))
     }, [formData.provincia])
 
 
@@ -147,7 +177,7 @@ const Publicar = () => {
                                 </div>
                             </div>
                             <div className="mt-5 md:mt-0 md:col-span-2">
-                                <form action="#" onSubmit={handleSubmit} method="POST">
+                                <form action="#" onSubmit={publicarPropiedad} method="POST">
                                     <div className="shadow sm:rounded-md sm:overflow-hidden">
                                         <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
 
@@ -198,6 +228,7 @@ const Publicar = () => {
                                                         onChange={handleChange}
                                                         name="provincia"
                                                         id="provincia"
+                                                        defaultValue={'06'}
                                                         className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none"
                                                         required
                                                     >
@@ -241,7 +272,7 @@ const Publicar = () => {
                                                     value={formData.address}
                                                     onChange={handleChange}
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    placeholder='Campichuelo #123'
+                                                    placeholder='Campichuelo 123'
                                                     required
                                                 />
                                             </div>
@@ -273,7 +304,7 @@ const Publicar = () => {
                                                 <label htmlFor="modalidad" className="block text-sm font-medium text-gray-700">
                                                     Tipo de operación
                                                 </label>
-                                                <select value={formData.modalidad} onChange={handleChange} name="modalidad" id="modalidad" required>
+                                                <select value={formData.modalidad} onChange={handleChange} name="modalidad" id="modalidad" required className="block mt-2 w-full px-2 py-2 rounded-lg bg-gray-200 border-0 text-base text-gray-900 placeholder-gray-700 focus:outline-none">
                                                     <option value="alquilar">Alquilar</option>
                                                     <option value="vender">Vender</option>
                                                 </select>
@@ -283,71 +314,133 @@ const Publicar = () => {
                                                 <input type="radio" name="modalidad" id="modalidad-vnd" value="Vender" onChange={handleChange}/>*/}
                                             </div>
 
+                                            {/*  INPUT PARA FOTO   */}
+
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700">Foto de portada (¡la más importante!)</label>
-                                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                                    <div className="space-y-1 text-center">
-                                                        <svg
-                                                            className="mx-auto h-12 w-12 text-gray-400"
-                                                            stroke="currentColor"
-                                                            fill="none"
-                                                            viewBox="0 0 48 48"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                                strokeWidth={2}
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
+                                                {wrongImageType && <p>El archivo debe ser una imagen</p>}
+
+                                                {!imageAsset ?
+                                                    (<div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                                        {loading ? <p>Cargando...</p> : (
+                                                            <div className="space-y-1 text-center">
+                                                                <svg
+                                                                    className="mx-auto h-12 w-12 text-gray-400"
+                                                                    stroke="currentColor"
+                                                                    fill="none"
+                                                                    viewBox="0 0 48 48"
+                                                                    aria-hidden="true"
+                                                                >
+                                                                    <path
+                                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                                        strokeWidth={2}
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                                <div className="flex text-sm text-gray-600">
+                                                                    <label
+                                                                        htmlFor="fileUpload"
+                                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500"
+                                                                    >
+                                                                        <span>Upload a file</span>
+                                                                        <input
+                                                                            id="fileUpload"
+                                                                            name="fileUpload"
+                                                                            type="file"
+                                                                            className="sr-only"
+                                                                            onChange={uploadImage} />
+                                                                    </label>
+                                                                    <p className="pl-1">or drag and drop</p>
+                                                                </div>
+                                                                <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
+                                                            </div>
+                                                        )}
+                                                    </div>)
+                                                    : (
+                                                        <div className='relative h-full mt-1'>
+                                                            <img
+                                                                src={imageAsset?.url}
+                                                                alt="uploaded-pic"
+                                                                className='max-h-72 rounded-lg relative'
+
                                                             />
-                                                        </svg>
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="fileUpload"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500"
+                                                            <button
+                                                                className='absolute top-0 right-0 bg-red-500 text-white rounded-full p-1'
+                                                                onClick={() => setImageAsset(null)}
                                                             >
-                                                                <span>Upload a file</span>
-                                                                <input id="fileUpload" name="fileUpload" type="file" className="sr-only" value={formData.title}
-                                                                    onChange={handleChange} />
-                                                            </label>
-                                                            <p className="pl-1">or drag and drop</p>
+                                                                X
+                                                            </button>
                                                         </div>
-                                                        <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
-                                                    </div>
-                                                </div>
+                                                    )
+                                                }
                                             </div>
+
+                                            {/*  FOTOS ADICIONALES   */}
 
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700">Fotos adicionales</label>
-                                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                                    <div className="space-y-1 text-center">
-                                                        <svg
-                                                            className="mx-auto h-12 w-12 text-gray-400"
-                                                            stroke="currentColor"
-                                                            fill="none"
-                                                            viewBox="0 0 48 48"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                                strokeWidth={2}
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            />
-                                                        </svg>
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="file-upload"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500"
+                                                {wrongImageType && <p>El archivo debe ser una imagen</p>}
+
+                                                {!imagesArray.length ?
+                                                    (<div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                                        {loading ? <p>Cargando...</p> : (
+                                                            <div className="space-y-1 text-center">
+                                                                <svg
+                                                                    className="mx-auto h-12 w-12 text-gray-400"
+                                                                    stroke="currentColor"
+                                                                    fill="none"
+                                                                    viewBox="0 0 48 48"
+                                                                    aria-hidden="true"
+                                                                >
+                                                                    <path
+                                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                                        strokeWidth={2}
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                                <div className="flex text-sm text-gray-600">
+                                                                    <label
+                                                                        htmlFor="fileUploadArray"
+                                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500"
+                                                                    >
+                                                                        <span>Upload a file</span>
+                                                                        <input
+                                                                            id="fileUploadArray"
+                                                                            name="fileUpload"
+                                                                            type="file"
+                                                                            className="sr-only"
+                                                                            onChange={uploadImageArray} />
+                                                                    </label>
+                                                                    <p className="pl-1">or drag and drop</p>
+                                                                </div>
+                                                                <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
+                                                            </div>
+                                                        )}
+                                                    </div>)
+                                                    : (
+                                                        <div className='relative h-full mt-1'>
+                                                            <div className='flex gap-2'>
+                                                                {imagesArray.map((image, index) => (
+                                                                    <img
+                                                                        key={index}
+                                                                        src={image.url}
+                                                                        alt="uploaded-pic"
+                                                                        className='max-h-64 rounded-lg relative'
+
+                                                                    />))
+                                                                }
+                                                            </div>
+                                                            <button
+                                                                className='absolute top-0 right-0 bg-red-500 text-white rounded-full p-1'
+                                                                onClick={() => setImageAsset(null)}
                                                             >
-                                                                <span>Upload a file</span>
-                                                                <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                                                            </label>
-                                                            <p className="pl-1">or drag and drop</p>
+                                                                X
+                                                            </button>
                                                         </div>
-                                                        <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
-                                                    </div>
-                                                </div>
+                                                    )
+                                                }
                                             </div>
 
                                             {/*  INPUT PARA PRECIO   */}
@@ -521,7 +614,6 @@ const Publicar = () => {
                                                 <button
                                                     type="submit"
                                                     className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                                                    onClick={publicarPropiedad}
                                                 /* 
 
                                                 ERRORES A RESOLVER:

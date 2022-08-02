@@ -25,7 +25,7 @@ export const homeQuery = `*[_type == "property"] {
   }`;
 
 export const propertyQuery = (slug) => {
-  const query = `*[ _type == "property" && slug.current == '${slug}']{
+  const query = `*[ _type == "property" && slug == '${slug}']{
     title,
     location,
     propertyType,

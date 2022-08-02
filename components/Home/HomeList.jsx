@@ -15,7 +15,7 @@ const HomeList = () => {
                 setLoading(false)
             })
 
-        }, [])
+    }, [])
 
     return (
         <div className="bg-gray-100">
@@ -32,7 +32,7 @@ const HomeList = () => {
                     :
                     <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
                         {properties.map((property) => (
-                            <Link key={property.slug.current} href={`/propiedad/${property.slug.current}`}>
+                            <Link key={property.slug} href={`/propiedad/${property.slug}`}>
                                 <a className='hover:opacity-75 transition-all duration-100'>
                                     <div className="flex flex-col cursor-pointer">
                                         <div className="h-80 rounded-lg overflow-hidden bg-gray-100">

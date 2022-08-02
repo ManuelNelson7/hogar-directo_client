@@ -26,7 +26,7 @@ const Login = () => {
     }
     const LoginUsuario = () => {
         signInWithEmailAndPassword(auth, email, pass)
-            .then((r) => {
+            .then(() => {
                 router.push(`/`)//aca redirigir despues del login
             })
             .catch((err) => {
