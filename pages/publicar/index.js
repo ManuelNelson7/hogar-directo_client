@@ -18,6 +18,10 @@ const Publicar = () => {
     const [setField] = useState();
     const router = useRouter()
 
+    useEffect(() => {
+        console.log(user.uid)
+    }, [])
+
     const uploadImage = (e) => {
         const selectedImage = e.target.files[0];
         //to input an image to the upload field
@@ -125,7 +129,7 @@ const Publicar = () => {
                 propertyType: formData.propType,
                 modalidad: formData.modalidad,
                 price: parseInt(formData.price),
-                currency: parseInt(formData.currency),
+                moneda: parseInt(formData.currency),
                 expensas: parseInt(formData.expensas),
                 ambientes: parseInt(formData.ambientes),
                 bathrooms: parseInt(formData.bathrooms),
@@ -134,7 +138,10 @@ const Publicar = () => {
                 totalSuperficie: parseInt(formData.supTotal),
                 descripcion: formData.description,
                 status: 'EN REVISION',
-                owner: user.uid, /*aca esta pasando el user ID, no lo reconoce en sanity, hay q ver q onda */
+                owner: {
+                    _type: 'owner',
+                    _ref: user.uid,
+                },
                 mainImage: {
                     _type: 'image',
                     asset: {
