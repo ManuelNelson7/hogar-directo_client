@@ -459,6 +459,7 @@ const Publicar = () => {
                                                         className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         placeholder='Ejemplo: 35000 (sin puntos ni comas)'
                                                         required
+                                                        min="0"
                                                     />
                                                 </div>
 
@@ -513,6 +514,7 @@ const Publicar = () => {
                                                             className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                             placeholder='Ejemplo: 4500 (sin puntos ni comas)'
                                                             required
+                                                            min="0"
                                                         />
                                                     </div>
                                                 )}
@@ -534,6 +536,7 @@ const Publicar = () => {
                                                         className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         placeholder='2'
                                                         required
+                                                        min="0"
                                                     />
                                                 </div>
 
@@ -551,6 +554,7 @@ const Publicar = () => {
                                                         className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         placeholder='1'
                                                         required
+                                                        min="0"
                                                     />
                                                 </div>
                                             </div>
@@ -571,6 +575,7 @@ const Publicar = () => {
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='1'
                                                     required
+                                                    min="0"
                                                 />
                                             </div>
 
@@ -589,6 +594,7 @@ const Publicar = () => {
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='25'
                                                     required
+                                                    min="0"
                                                 />{/*esto tiene q estar en m2*/}
                                             </div>
 
@@ -607,6 +613,7 @@ const Publicar = () => {
                                                     className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     placeholder='38'
                                                     required
+                                                    min="0"
                                                 />{/*esto tiene q estar en m2*/}
                                             </div>
 

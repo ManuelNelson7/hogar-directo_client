@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState, useCallback} from 'react'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { Audio } from  'react-loader-spinner';
 
 const Map = ({ location }) => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: 'AIzaSyDz678a_Ux5jTiLt2wONgOYLtp6QbMcHDc'
+        googleMapsApiKey: 'AIzaSyAi6Ud23fBgt9u9IQRVH2VA_jpCR9Fc0Y8'
     })
 
     const containerStyle = {
@@ -18,15 +19,15 @@ const Map = ({ location }) => {
         lng: location.lng
     };
 
-    const [map, setMap] = React.useState(null)
+    const [map, setMap] = useState(null)
 
-    const onLoad = React.useCallback(function callback(map) {
+    const onLoad = useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
         setMap(map)
     }, [])
 
-    const onUnmount = React.useCallback(function callback(map) {
+    const onUnmount = useCallback(function callback(map) {
         setMap(null)
     }, [])
 
@@ -36,7 +37,7 @@ const Map = ({ location }) => {
         <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={10}
+            zoom={15}
             onLoad={onLoad}
             onUnmount={onUnmount}
             options={{
@@ -55,7 +56,20 @@ const Map = ({ location }) => {
             />
             <></>
         </GoogleMap>
-    ) : <></>
+    ) : (
+        <>
+            <p>Loading Map...</p>
+            <Audio
+                height = "80"
+                width = "80"
+                radius = "9"
+                color = 'green'
+                ariaLabel = 'three-dots-loading'     
+                wrapperStyle
+                wrapperClass
+            />
+        </>
+    )
 }
 
 export default React.memo(Map)
