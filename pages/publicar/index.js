@@ -4,10 +4,23 @@ import Layout from '../../components/Layout/Layout'
 import { sanityClient } from '../../sanity'
 import { propertyTypes, provinciasOrdered, fetchDepartamentos } from '../../utils/utils'
 import { useRouter } from 'next/router'
+import {
+    useJsApiLoader,
+    Autocomplete,
+  } from '@react-google-maps/api'
+import { useRef } from 'react'
 
 const Publicar = () => {
     const [departamentos, setDepartamentos] = useState([])
     let { user } = useContext(AppContext)
+
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: 'AIzaSyAi6Ud23fBgt9u9IQRVH2VA_jpCR9Fc0Y8',
+        libraries: ['places'],
+    })
+
+    const addressRef = useRef()
 
 
     /* https://www.section.io/engineering-education/uploading-deleting-and-downloading-images-uploaded-to-sanity-io/  */
@@ -108,6 +121,8 @@ const Publicar = () => {
 
     function handleChange(event) {
         const { name, value, type, checked } = event.target
+        address: addressRef.current.value
+        console.log(address)
         setFormData(prevFormData => {
             return {
                 ...prevFormData,
@@ -129,7 +144,7 @@ const Publicar = () => {
                 propertyType: formData.propType,
                 modalidad: formData.modalidad,
                 price: parseInt(formData.price),
-                moneda: parseInt(formData.currency),
+                currency: parseInt(formData.currency),
                 expensas: parseInt(formData.expensas),
                 ambientes: parseInt(formData.ambientes),
                 bathrooms: parseInt(formData.bathrooms),
@@ -169,7 +184,7 @@ const Publicar = () => {
     }, [formData.provincia])
 
 
-    return (
+    return isLoaded ? (
         <Layout>
             {user &&
                 <div className="max-w-2xl pt-4 pb-4 mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-4">
@@ -272,16 +287,19 @@ const Publicar = () => {
                                                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                                                     Dirección de la propiedad
                                                 </label>
-                                                <input
-                                                    type="text"
-                                                    name="address"
-                                                    id="address"
-                                                    value={formData.address}
-                                                    onChange={handleChange}
-                                                    className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    placeholder='Campichuelo 123'
-                                                    required
-                                                />
+                                                <Autocomplete>
+                                                    <input
+                                                        type="text"
+                                                        name="address"
+                                                        id="address"
+                                                        value={formData.address}
+                                                        onChange={handleChange}
+                                                        className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        placeholder='Campichuelo 123'
+                                                        required
+                                                        ref={addressRef}
+                                                    />
+                                                </Autocomplete>
                                             </div>
 
                                             {/*  INPUT PARA TIPO DE PROPIEDAD   */}
@@ -653,7 +671,7 @@ const Publicar = () => {
                 </div>}
 
         </Layout>
-    )
+    ) : ''
 }
 
 export default Publicar
