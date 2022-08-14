@@ -1,5 +1,5 @@
-import React, {useState, useCallback} from 'react'
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import React, {useState, useMemo} from 'react'
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { Audio } from  'react-loader-spinner';
 
 const Map = ({ location }) => {
@@ -15,32 +15,15 @@ const Map = ({ location }) => {
         borderRadius: 12,
     };
 
-    const center = {
-        lat: location.lat,
-        lng: location.lng
-    };
+    const center = useMemo(() => ({ lat: location.lat, lng: location.lng }), []);
 
     const [map, setMap] = useState(null)
-
-    const onLoad = useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-        setMap(map)
-    }, [])
-
-    const onUnmount = useCallback(function callback(map) {
-        setMap(null)
-    }, [])
-
-    const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
             zoom={15}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
             options={{
                 streetViewControl: false,
                 mapTypeControl: false,
@@ -48,14 +31,6 @@ const Map = ({ location }) => {
                 fullscreenControl: false,
             }}
         >
-            <Marker
-                position={{ lat: location.lat, lng: location.lng }}
-                icon={{
-                    url: image,
-                    anchor: new window.google.maps.Point(5, 58),
-                }}
-            />
-            <></>
         </GoogleMap>
     ) : (
         <>

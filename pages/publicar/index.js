@@ -1,14 +1,96 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { AppContext } from '../../components/AppContext'
 import Layout from '../../components/Layout/Layout'
 import { sanityClient } from '../../sanity'
 import { propertyTypes, provinciasOrdered, fetchDepartamentos } from '../../utils/utils'
 import { useRouter } from 'next/router'
 import {
+    GoogleMap,
+    Marker,
     useJsApiLoader,
     Autocomplete,
-  } from '@react-google-maps/api'
-import { useRef } from 'react'
+} from '@react-google-maps/api'
+import usePlacesAutocomplete, {
+    getGeocode,
+    getLatLng,
+} from "use-places-autocomplete";
+import {
+    Combobox,
+    ComboboxInput,
+    ComboboxPopover,
+    ComboboxList,
+    ComboboxOption,
+  } from "@reach/combobox";
+  import "@reach/combobox/styles.css";
+
+function Map () {
+    const center = useMemo(() => ({ lat: -34.6000000, lng: -58.4500000 }), []);
+    const [selected, setSelected] = useState(null);    
+    const containerStyle = {
+        width: '100%',
+        height: '400px',
+        borderRadius: 12,
+    };
+
+    return (
+        <>
+            <div className="places-container">
+                <PlacesAutocomplete setSelected={setSelected} />
+            </div>
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={center}
+                zoom={11}
+                options={{
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    zoomControl: false,
+                    fullscreenControl: false,
+                }}
+            >
+                {selected && <Marker position={selected} />}
+            </GoogleMap>
+        </>
+    )
+}
+
+const PlacesAutocomplete = ({ setSelected }) => {
+    const {
+        ready,
+        value,
+        setValue,
+        suggestions: { status, data },
+        clearSuggestions,
+      } = usePlacesAutocomplete();
+    const handleSelect = async (address) => {
+        setValue(address, false);
+        clearSuggestions();
+        const results = await getGeocode({ address });
+        const { lat, lng } = await getLatLng(results[0]);
+        setSelected({ lat, lng });
+        console.log(lat);
+        console.log(lng);
+    };
+    return (
+        <Combobox onSelect={handleSelect}>
+            <ComboboxInput
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                disabled={!ready}
+                className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                placeholder='Campichuelo 123'
+            />
+            <ComboboxPopover>
+                <ComboboxList>
+                    {status === "OK" &&
+                    data.map(({ place_id, description }) => (
+                    <ComboboxOption key={place_id} value={description} />
+                    ))}
+                </ComboboxList>
+            </ComboboxPopover>
+        </Combobox>
+    )
+}
 
 const Publicar = () => {
     const [departamentos, setDepartamentos] = useState([])
@@ -22,13 +104,27 @@ const Publicar = () => {
 
     const addressRef = useRef()
 
+    const onLoad = useCallback(function callback(map) {
+        const bounds = new window.google.maps.LatLngBounds(center);
+        map.fitBounds(bounds);
+        setMap(map)
+    }, [])
+
+    const onUnmount = useCallback(function callback(map) {
+        setMap(null)
+    }, [])
+
+    const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
+    const [directionsResponse, setDirectionsResponse] = useState(null)
+    const originRef = useRef()
+
 
     /* https://www.section.io/engineering-education/uploading-deleting-and-downloading-images-uploaded-to-sanity-io/  */
     const [imageAsset, setImageAsset] = useState(null);
     const [imagesArray, setImagesArray] = useState([])
     const [loading, setLoading] = useState(false)
     const [wrongImageType, setWrongImageType] = useState(false);
-    const [setField] = useState();
     const router = useRouter()
 
     useEffect(() => {
@@ -72,29 +168,6 @@ const Publicar = () => {
                 });
         } else {
             setWrongImageType(true);
-        }
-    };
-
-    const saveImage = () => {
-        if (imageAsset?._id) {
-            const doc = {
-                _type: "photo",
-                image: {
-                    _type: "image",
-                    asset: {
-                        _type: "reference",
-                        _ref: imageAsset?._id,
-                    },
-                },
-            };
-            sanityClient.createIfNotExists(doc).then(() => {
-                alert("Tu anuncio fue enviado a revisión, si cumple los requisitos pronto podrás verlo publicado!")
-            });
-        } else {
-            setField(true);
-            setTimeout(() => {
-                setField(false);
-            }, 2000);
         }
     };
 
@@ -183,7 +256,6 @@ const Publicar = () => {
             : setDepartamentos(fetchDepartamentos('06'))
     }, [formData.provincia])
 
-
     return isLoaded ? (
         <Layout>
             {user &&
@@ -240,7 +312,7 @@ const Publicar = () => {
                                                 </p>
                                             </div>
 
-                                            <div className='grid grid-cols-2 gap-3'>
+                                            {/*<div className='grid grid-cols-2 gap-3'>
                                                 <div>
                                                     <label htmlFor="propType" className="block text-sm font-medium text-gray-700">
                                                         Provincia
@@ -280,27 +352,15 @@ const Publicar = () => {
                                                 </div>
 
 
-                                            </div>
+                                            </div>*/}
 
 
                                             <div className="col-span-6 sm:col-span-3">
                                                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                                                     Dirección de la propiedad
                                                 </label>
-                                                <Autocomplete>
-                                                    <input
-                                                        type="text"
-                                                        name="address"
-                                                        id="address"
-                                                        value={formData.address}
-                                                        onChange={handleChange}
-                                                        className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        placeholder='Campichuelo 123'
-                                                        required
-                                                        ref={addressRef}
-                                                    />
-                                                </Autocomplete>
                                             </div>
+                                            <Map/>
 
                                             {/*  INPUT PARA TIPO DE PROPIEDAD   */}
 
