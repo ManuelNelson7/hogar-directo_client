@@ -6,7 +6,8 @@ export const formatPrice = (price) => (price.toLocaleString('es-AR', { style: 'c
 
 export const homeQuery = `*[_type == "property"] {
     title,
-       location,
+       latitud,
+       longitud,
        propertyType,
        mainImage,
        images,
@@ -17,6 +18,7 @@ export const homeQuery = `*[_type == "property"] {
        slug,
        descripcion,
        modalidad,
+       totalSuperficie,
        owner->{
            name,
            slug,
@@ -27,6 +29,8 @@ export const homeQuery = `*[_type == "property"] {
 export const propertyQuery = (slug) => {
   const query = `*[ _type == "property" && slug == '${slug}']{
     title,
+    latitud,
+    longitud,
     location,
     propertyType,
     mainImage,

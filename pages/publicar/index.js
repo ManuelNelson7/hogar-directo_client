@@ -20,48 +20,97 @@ import {
     ComboboxPopover,
     ComboboxList,
     ComboboxOption,
-  } from "@reach/combobox";
-  import "@reach/combobox/styles.css";
+} from "@reach/combobox";
+import "@reach/combobox/styles.css";
 
-function Map () {
+// function Map() {
+//     const center = useMemo(() => ({ lat: -34.6000000, lng: -58.4500000 }), []);
+//     const [selected, setSelected] = useState(null);
+//     const containerStyle = {
+//         width: '100%',
+//         height: '400px',
+//         borderRadius: 12,
+//     };
+
+//     return (
+//         <>
+//             <div className="places-container">
+//                 <PlacesAutocomplete setSelected={setSelected} />
+//             </div>
+//             <GoogleMap
+//                 mapContainerStyle={containerStyle}
+//                 center={center}
+//                 zoom={11}
+//                 options={{
+//                     streetViewControl: false,
+//                     mapTypeControl: false,
+//                     zoomControl: false,
+//                     fullscreenControl: false,
+//                 }}
+//             >
+//                 {selected && <Marker position={selected} />}
+//             </GoogleMap>
+//         </>
+//     )
+// }
+
+// const PlacesAutocomplete = ({ setSelected }) => {
+//     const {
+//         ready,
+//         value,
+//         setValue,
+//         suggestions: { status, data },
+//         clearSuggestions,
+//     } = usePlacesAutocomplete();
+//     const handleSelect = async (address) => {
+//         setValue(address, false);
+//         clearSuggestions();
+//         const results = await getGeocode({ address });
+//         const { lat, lng } = await getLatLng(results[0]);
+//         setSelected({ lat, lng });
+//         console.log(lat);
+//         console.log(lng);
+//     };
+//     return (
+//         <Combobox onSelect={handleSelect}>
+//             <ComboboxInput
+//                 value={value}
+//                 onChange={(e) => setValue(e.target.value)}
+//                 disabled={!ready}
+//                 className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+//                 placeholder='Campichuelo 123'
+//             />
+//             <ComboboxPopover>
+//                 <ComboboxList>
+//                     {status === "OK" &&
+//                         data.map(({ place_id, description }) => (
+//                             <ComboboxOption key={place_id} value={description} />
+//                         ))}
+//                 </ComboboxList>
+//             </ComboboxPopover>
+//         </Combobox>
+//     )
+// }
+
+const Publicar = () => {
+    const [departamentos, setDepartamentos] = useState([])
+    let { user } = useContext(AppContext)
+
     const center = useMemo(() => ({ lat: -34.6000000, lng: -58.4500000 }), []);
-    const [selected, setSelected] = useState(null);    
+    const [selected, setSelected] = useState(null);
     const containerStyle = {
         width: '100%',
         height: '400px',
         borderRadius: 12,
     };
 
-    return (
-        <>
-            <div className="places-container">
-                <PlacesAutocomplete setSelected={setSelected} />
-            </div>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={center}
-                zoom={11}
-                options={{
-                    streetViewControl: false,
-                    mapTypeControl: false,
-                    zoomControl: false,
-                    fullscreenControl: false,
-                }}
-            >
-                {selected && <Marker position={selected} />}
-            </GoogleMap>
-        </>
-    )
-}
-
-const PlacesAutocomplete = ({ setSelected }) => {
     const {
         ready,
         value,
         setValue,
         suggestions: { status, data },
         clearSuggestions,
-      } = usePlacesAutocomplete();
+    } = usePlacesAutocomplete();
     const handleSelect = async (address) => {
         setValue(address, false);
         clearSuggestions();
@@ -71,30 +120,6 @@ const PlacesAutocomplete = ({ setSelected }) => {
         console.log(lat);
         console.log(lng);
     };
-    return (
-        <Combobox onSelect={handleSelect}>
-            <ComboboxInput
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                disabled={!ready}
-                className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                placeholder='Campichuelo 123'
-            />
-            <ComboboxPopover>
-                <ComboboxList>
-                    {status === "OK" &&
-                    data.map(({ place_id, description }) => (
-                    <ComboboxOption key={place_id} value={description} />
-                    ))}
-                </ComboboxList>
-            </ComboboxPopover>
-        </Combobox>
-    )
-}
-
-const Publicar = () => {
-    const [departamentos, setDepartamentos] = useState([])
-    let { user } = useContext(AppContext)
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -194,8 +219,6 @@ const Publicar = () => {
 
     function handleChange(event) {
         const { name, value, type, checked } = event.target
-        address: addressRef.current.value
-        console.log(address)
         setFormData(prevFormData => {
             return {
                 ...prevFormData,
@@ -207,17 +230,19 @@ const Publicar = () => {
     const publicarPropiedad = (e) => {
         e.preventDefault()
         console.log(formData)
-        if (user && formData.title && formData.description && formData.provincia && formData.zona && formData.address && formData.propType && formData.modalidad && formData.price && formData.currency && formData.ambientes && formData.bathrooms && formData.bedrooms && formData.supCubierta && formData.supTotal) {
+        if (user && formData.title && formData.description && formData.provincia && formData.zona && formData.propType && formData.modalidad && formData.price && formData.currency && formData.ambientes && formData.bathrooms && formData.bedrooms && formData.supCubierta && formData.supTotal) {
             const idDoc = formData.title.toLowerCase().replace(/ /g, "-") + Math.random().toString(36).substring(2, 15);
             const doc = {
                 _id: idDoc,
                 _type: 'property',
                 title: formData.title,
                 address: formData.address,
+                latitud: selected.lat,
+                longitud: selected.lng,
                 propertyType: formData.propType,
                 modalidad: formData.modalidad,
                 price: parseInt(formData.price),
-                currency: parseInt(formData.currency),
+                moneda: parseInt(formData.currency),
                 expensas: parseInt(formData.expensas),
                 ambientes: parseInt(formData.ambientes),
                 bathrooms: parseInt(formData.bathrooms),
@@ -360,7 +385,40 @@ const Publicar = () => {
                                                     Dirección de la propiedad
                                                 </label>
                                             </div>
-                                            <Map/>
+                                            <>
+                                                <div className="places-container">
+                                                    <Combobox onSelect={handleSelect}>
+                                                        <ComboboxInput
+                                                            value={value}
+                                                            onChange={(e) => setValue(e.target.value)}
+                                                            disabled={!ready}
+                                                            className="mt-1 block w-full py-1.5 px-2 border-2 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                            placeholder='Campichuelo 123'
+                                                        />
+                                                        <ComboboxPopover>
+                                                            <ComboboxList>
+                                                                {status === "OK" &&
+                                                                    data.map(({ place_id, description }) => (
+                                                                        <ComboboxOption key={place_id} value={description} />
+                                                                    ))}
+                                                            </ComboboxList>
+                                                        </ComboboxPopover>
+                                                    </Combobox>
+                                                </div>
+                                                <GoogleMap
+                                                    mapContainerStyle={containerStyle}
+                                                    center={center}
+                                                    zoom={11}
+                                                    options={{
+                                                        streetViewControl: false,
+                                                        mapTypeControl: false,
+                                                        zoomControl: false,
+                                                        fullscreenControl: false,
+                                                    }}
+                                                >
+                                                    {selected && <Marker position={selected} />}
+                                                </GoogleMap>
+                                            </>
 
                                             {/*  INPUT PARA TIPO DE PROPIEDAD   */}
 
@@ -426,7 +484,7 @@ const Publicar = () => {
                                                                 <div className="flex text-sm text-gray-600">
                                                                     <label
                                                                         htmlFor="fileUpload"
-                                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500"
+                                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-sky-600 hover:text-sky-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-sky-500"
                                                                     >
                                                                         <span>Upload a file</span>
                                                                         <input
@@ -488,7 +546,7 @@ const Publicar = () => {
                                                                 <div className="flex text-sm text-gray-600">
                                                                     <label
                                                                         htmlFor="fileUploadArray"
-                                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500"
+                                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-sky-600 hover:text-sky-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-sky-500"
                                                                     >
                                                                         <span>Upload a file</span>
                                                                         <input
@@ -705,7 +763,7 @@ const Publicar = () => {
                                             <div className="px-4 py-3 text-right sm:px-6">
                                                 <button
                                                     type="submit"
-                                                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
                                                 /* 
 
                                                 ERRORES A RESOLVER:

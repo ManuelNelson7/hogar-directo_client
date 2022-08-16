@@ -56,7 +56,7 @@ const Perfil = () => {
                                             href={item.href}
                                             className={classNames(
                                                 item.current
-                                                    ? 'bg-teal-50 border-teal-500 text-teal-700 hover:bg-teal-50 hover:text-teal-700'
+                                                    ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
                                                     : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
                                                 'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                                             )}
@@ -65,7 +65,7 @@ const Perfil = () => {
                                             <item.icon
                                                 className={classNames(
                                                     item.current
-                                                        ? 'text-teal-500 group-hover:text-teal-500'
+                                                        ? 'text-sky-500 group-hover:text-sky-500'
                                                         : 'text-gray-400 group-hover:text-gray-500',
                                                     'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
                                                 )}
@@ -193,7 +193,7 @@ const Perfil = () => {
                                                         checked={availableToHire}
                                                         onChange={setAvailableToHire}
                                                         className={classNames(
-                                                            availableToHire ? 'bg-teal-500' : 'bg-gray-200',
+                                                            availableToHire ? 'bg-sky-500' : 'bg-gray-200',
                                                             'ml-4 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500'
                                                         )}
                                                     >
@@ -219,7 +219,7 @@ const Perfil = () => {
                                                         checked={privateAccount}
                                                         onChange={setPrivateAccount}
                                                         className={classNames(
-                                                            privateAccount ? 'bg-teal-500' : 'bg-gray-200',
+                                                            privateAccount ? 'bg-sky-500' : 'bg-gray-200',
                                                             'ml-4 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500'
                                                         )}
                                                     >
@@ -245,7 +245,7 @@ const Perfil = () => {
                                                         checked={allowCommenting}
                                                         onChange={setAllowCommenting}
                                                         className={classNames(
-                                                            allowCommenting ? 'bg-teal-500' : 'bg-gray-200',
+                                                            allowCommenting ? 'bg-sky-500' : 'bg-gray-200',
                                                             'ml-4 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500'
                                                         )}
                                                     >
@@ -271,7 +271,7 @@ const Perfil = () => {
                                                         checked={allowMentions}
                                                         onChange={setAllowMentions}
                                                         className={classNames(
-                                                            allowMentions ? 'bg-teal-500' : 'bg-gray-200',
+                                                            allowMentions ? 'bg-sky-500' : 'bg-gray-200',
                                                             'ml-4 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500'
                                                         )}
                                                     >

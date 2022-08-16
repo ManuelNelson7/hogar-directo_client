@@ -38,6 +38,8 @@ const Property = () => {
                     <PropiedadDetails
                         title={property.title}
                         location={property.location}
+                        lat={property.latitud}
+                        lng={property.longitud}
                         propertyType={property.propertyType}
                         mainImage={property.mainImage}
                         images={property.images}

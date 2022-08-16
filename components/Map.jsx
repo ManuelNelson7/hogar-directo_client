@@ -2,7 +2,7 @@ import React, {useState, useMemo} from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { Audio } from  'react-loader-spinner';
 
-const Map = ({ location }) => {
+const Map = ({ lat, lng }) => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: 'AIzaSyAi6Ud23fBgt9u9IQRVH2VA_jpCR9Fc0Y8',
@@ -15,7 +15,7 @@ const Map = ({ location }) => {
         borderRadius: 12,
     };
 
-    const center = useMemo(() => ({ lat: location.lat, lng: location.lng }), []);
+    const center = useMemo(() => ({ lat: lat, lng: lng }), []);
 
     const [map, setMap] = useState(null)
 
