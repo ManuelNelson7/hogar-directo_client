@@ -4,7 +4,7 @@ import { HomeIcon } from '@heroicons/react/outline'
 import Link from "next/link"
 import { AppContext } from "../../components/AppContext"
 import { useRouter } from "next/router"
-
+import Email from "../../utils/email"
 
 const Ingresar = () => {
   const [user, setUser] = useState({
@@ -25,6 +25,7 @@ const Ingresar = () => {
   const handleGoogleSignUp = async () => {
     try {
       await loginWithGoogle()
+      new Email(user.email).sendEmail
       router.push("/")
     } catch {
       setError("Error al ingresar con Google") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
@@ -34,6 +35,7 @@ const Ingresar = () => {
   const handleFacebookSignUp = async () => {
     try {
       await loginWithFacebook()
+      new Email(user.email).sendEmail
       router.push("/")
     } catch {
       setError("Error al ingresar con Facebook") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
@@ -51,6 +53,7 @@ const Ingresar = () => {
       if (user.password.length > 5 && user.name.length > 2) {
         try {
           await signup(user.email, user.password, user.name);
+          new Email(user.email).sendEmail
           push('/')
         } catch (e) {
           error.code === "auth/email-already-in-use" && setError("Email already in use")

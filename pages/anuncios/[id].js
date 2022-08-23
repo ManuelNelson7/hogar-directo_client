@@ -11,6 +11,7 @@ import {
     UserCircleIcon,
     ViewGridAddIcon,
     XIcon,
+    HeartIcon,
 } from '@heroicons/react/outline'
 import Layout from '../../components/Layout/Layout'
 
@@ -20,19 +21,22 @@ const navigation = [
     { name: 'Applicants', href: '#', current: false },
     { name: 'Company', href: '#', current: false },
 ]
-const subNavigation = [
-    { name: 'Mi perfil', href: '#', icon: UserCircleIcon, current: true },
-    { name: 'Mis anuncios', href: '#', icon: SpeakerphoneIcon, current: false },
-    { name: 'Contraseña', href: '#', icon: KeyIcon, current: false },
-    { name: 'Cerrar sesión', href: '#', icon: LogoutIcon, current: false },
-]
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-const Perfil = () => {
+const Anuncios = () => {
     let { user } = useContext(AppContext)
+
+    const subNavigation = [
+        { name: 'Mi perfil', href: `../perfil/${user.uid}`, icon: UserCircleIcon, current: false },
+        { name: 'Mis favoritos', href: `../favoritos/${user.uid}`, icon: HeartIcon, current: false },
+        { name: 'Mis anuncios', href: '#', icon: SpeakerphoneIcon, current: true },
+        { name: 'Contraseña', href: '#', icon: KeyIcon, current: false },
+        { name: 'Cerrar sesión', href: '#', icon: LogoutIcon, current: false },
+    ]
 
     console.log(user)
 
@@ -310,4 +314,4 @@ const Perfil = () => {
     )
 }
 
-export default Perfil
+export default Anuncios

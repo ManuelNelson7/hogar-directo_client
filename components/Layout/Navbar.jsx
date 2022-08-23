@@ -90,6 +90,8 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
+
+
 const Navbar = () => {
 
     let { user, logout } = useContext(AppContext)
@@ -285,12 +287,12 @@ const Navbar = () => {
                                         leaveTo="transform opacity-0 scale-95"
                                     >
                                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            <Link href='/perfil'>
+                                            <Link href={`perfil/${user.uid}`}>
                                                 <a className='block py-2 px-4 text-sm text-gray-700 cursor-pointer'>
                                                     Mi perfil
                                                 </a>
                                             </Link>
-                                            <Link href='/mi perfil'>
+                                            <Link href={`anuncios/${user.uid}`}>
                                                 <a className='block py-2 px-4 text-sm text-gray-700 cursor-pointer'>
                                                     Mis anuncios
                                                 </a>
