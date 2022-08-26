@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 
 const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey('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')
+sgMail.setApiKey('')
 
 
 const Email = ({user}) => {
