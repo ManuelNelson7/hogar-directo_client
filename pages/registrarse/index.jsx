@@ -4,7 +4,8 @@ import { HomeIcon } from '@heroicons/react/outline'
 import Link from "next/link"
 import { AppContext } from "../../components/AppContext"
 import { useRouter } from "next/router"
-import Email from "../../utils/email"
+//import Email from '../../utils/Email.jsx'
+//import nc from "next-connect";
 
 const Ingresar = () => {
   const [user, setUser] = useState({
@@ -25,23 +26,33 @@ const Ingresar = () => {
   const handleGoogleSignUp = async () => {
     try {
       await loginWithGoogle()
-      new Email(user.email).sendEmail
-      router.push("/")
+      //ACA HAY QUE PONER EL MAIL QUE SE MANDE CON EL MAIL QUE SALE DE GOOGLE, NO SE COMO PASAR ESE DATO//
+      //try{
+        //await fetch("../api/welcome", {
+          //"method": "POST",
+          //"headers": { "content-type": "application/json" },
+          //"body": JSON.stringify(user)
+        //})
+        router.push("/")
+      //} catch {
+        //alert(error)
+      //}
     } catch {
       setError("Error al ingresar con Google") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
     }
   }
 
-  const handleFacebookSignUp = async () => {
-    try {
-      await loginWithFacebook()
-      new Email(user.email).sendEmail
-      router.push("/")
-    } catch {
-      setError("Error al ingresar con Facebook") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
-    }
-  }
+  //const handleFacebookSignUp = async () => {
+    //try {
+      //await loginWithFacebook()
+      //new Email(user.email).sendEmail
+      //router.push("/")
+    //} catch {
+      //setError("Error al ingresar con Facebook") // Verificar q onda esto, lo puse mas q nada para q la consola de next no tire error si el usuario cierra el popup
+    //}
+  //}
 
+  //const handler = nc();
 
   const handleSubmit = async (e) => {
     setError("");
@@ -51,15 +62,48 @@ const Ingresar = () => {
     user.name.length < 3 && setError("Name must be at least 3 characters");
     if (user) {
       if (user.password.length > 5 && user.name.length > 2) {
-        try {
-          await signup(user.email, user.password, user.name);
-          new Email(user.email).sendEmail
-          push('/')
-        } catch (e) {
-          error.code === "auth/email-already-in-use" && setError("Email already in use")
-          error.code === "auth/invalid-email" && setError("Invalid email")
-          error.code === "auth/weak-password" && setError("Password is too weak")
-        }
+        //handler.post(async (req, res) => {
+          // Get user based on POSTed email
+          //let user = await User.findOne({ email: req.body.email });
+        
+          //if (!user) {
+            //user = await User.create({
+              //email: req.body.email,
+            //});
+          //}
+        
+          //try {
+            //await new Email(user).sendEmail();
+            //return res.status(200).json({
+              //success: true,
+              //message: 'Check your email to complete login.',
+            //});
+          //} catch (error) {
+            //return res.status(500).json({
+              //success: false,
+              //message: 'Error sending email. Please try again.',
+            //});
+          //}
+        //});
+        //console.log(user)
+            try {
+              await fetch("../api/welcome", {
+                "method": "POST",
+                "headers": { "content-type": "application/json" },
+                "body": JSON.stringify(user)
+              })
+              try {
+                await signup(user.email, user.password, user.name);
+                router.push("/")
+              } catch (error) {
+                error.code === "auth/email-already-in-use" && setError("Email already in use")
+                error.code === "auth/invalid-email" && setError("Invalid email")
+                error.code === "auth/weak-password" && setError("Password is too weak")
+              }
+            } catch (error) {
+              alert('Error')
+            }
+        //alert(user.email)
       }
     } else {
       setError("Please fill in all fields")
@@ -190,7 +234,7 @@ const Ingresar = () => {
                   </a>
                 </div>
 
-                <div onClick={handleFacebookSignUp}>
+                {/*<div onClick={handleFacebookSignUp}>
                   <a
                     href="#"
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
@@ -204,7 +248,7 @@ const Ingresar = () => {
                       />
                     </svg>
                   </a>
-                </div>
+                </div>*/}
 
               </div>
             </div>

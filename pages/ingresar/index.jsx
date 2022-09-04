@@ -26,14 +26,14 @@ const Ingresar = () => {
     router.push("/")
   }
 
-  const handleFacebookSignUp = async () => {
-    try {
-      await loginWithFacebook()
-      router.push("/")
-    } catch {
-      setError("Error al ingresar con Facebook")
-    }
-  }
+  //const handleFacebookSignUp = async () => {
+    //try {
+      //await loginWithFacebook()
+      //router.push("/")
+    //} catch {
+      //setError("Error al ingresar con Facebook")
+    //}
+  //}
 
   const handleSubmit = async (e) => {
     setError("");
@@ -164,7 +164,7 @@ const Ingresar = () => {
                   </a>
                 </div>
 
-                <div onClick={handleFacebookSignUp}>
+                {/*<div onClick={handleFacebookSignUp}>
                   <a
                     href="#"
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
@@ -178,7 +178,7 @@ const Ingresar = () => {
                       />
                     </svg>
                   </a>
-                </div>
+                </div>*/}
 
               </div>
             </div>

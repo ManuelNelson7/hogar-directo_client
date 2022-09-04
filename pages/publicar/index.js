@@ -227,47 +227,56 @@ const Publicar = () => {
         })
     }
 
-    const publicarPropiedad = (e) => {
+    const publicarPropiedad = async (e) => {
         e.preventDefault()
         console.log(formData)
         if (user && formData.title && formData.description && formData.provincia && formData.zona && formData.propType && formData.modalidad && formData.price && formData.currency && formData.ambientes && formData.bathrooms && formData.bedrooms && formData.supCubierta && formData.supTotal) {
-            const idDoc = formData.title.toLowerCase().replace(/ /g, "-") + Math.random().toString(36).substring(2, 15);
-            const doc = {
-                _id: idDoc,
-                _type: 'property',
-                title: formData.title,
-                address: formData.address,
-                latitud: selected.lat,
-                longitud: selected.lng,
-                propertyType: formData.propType,
-                modalidad: formData.modalidad,
-                price: parseInt(formData.price),
-                moneda: parseInt(formData.currency),
-                expensas: parseInt(formData.expensas),
-                ambientes: parseInt(formData.ambientes),
-                bathrooms: parseInt(formData.bathrooms),
-                bedrooms: parseInt(formData.bedrooms),
-                superficie: parseInt(formData.supCubierta),
-                totalSuperficie: parseInt(formData.supTotal),
-                descripcion: formData.description,
-                status: 'EN REVISION',
-                owner: {
-                    _type: 'owner',
-                    _ref: user.uid,
-                },
-                mainImage: {
-                    _type: 'image',
-                    asset: {
-                        _type: 'reference',
-                        _ref: imageAsset?._id,
-                    }
-                },
-                slug: idDoc /* esto no lo reconoce sanity como "type slug" */
-            };
+            try {
+                await fetch("../api/publicado", {
+                    "method": "POST",
+                    "headers": { "content-type": "application/json" },
+                    "body": JSON.stringify(user)
+                })
+                const idDoc = formData.title.toLowerCase().replace(/ /g, "-") + Math.random().toString(36).substring(2, 15);
+                const doc = {
+                    _id: idDoc,
+                    _type: 'property',
+                    title: formData.title,
+                    address: formData.address,
+                    latitud: selected.lat,
+                    longitud: selected.lng,
+                    propertyType: formData.propType,
+                    modalidad: formData.modalidad,
+                    price: parseInt(formData.price),
+                    moneda: parseInt(formData.currency),
+                    expensas: parseInt(formData.expensas),
+                    ambientes: parseInt(formData.ambientes),
+                    bathrooms: parseInt(formData.bathrooms),
+                    bedrooms: parseInt(formData.bedrooms),
+                    superficie: parseInt(formData.supCubierta),
+                    totalSuperficie: parseInt(formData.supTotal),
+                    descripcion: formData.description,
+                    status: 'EN REVISION',
+                    owner: {
+                        _type: 'owner',
+                        _ref: user.uid,
+                    },
+                    mainImage: {
+                        _type: 'image',
+                        asset: {
+                            _type: 'reference',
+                            _ref: imageAsset?._id,
+                        }
+                    },
+                    slug: idDoc /* esto no lo reconoce sanity como "type slug" */
+                };
 
-            sanityClient.createIfNotExists(doc).then(() => {
-                router.push('/')
-            }).catch((err) => { console.log(err.message) })
+                sanityClient.createIfNotExists(doc).then(() => {
+                    router.push('/')
+                }).catch((err) => { console.log(err.message) })
+            } catch (error) {
+                alert('Error')
+            }
         }
     }
 
